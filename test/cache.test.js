@@ -1,11 +1,11 @@
-const { expect } = require('chai');
-const c = require('../../lib').hookCache;
+import { expect } from 'chai';
+import { hookCache } from '../src';
 
 describe('Cache Hook', () => {
   it('adds a cache object', () => {
-    const hook = c();
+    const hook = hookCache();
     const mock = {
-      params : { query: ''},
+      params: { query: ''},
       path: 'test-route',
       result: {
         _sys: {
@@ -27,9 +27,9 @@ describe('Cache Hook', () => {
   });
 
   it('does not modify the existing cache object', () => {
-    const hook = c();
+    const hook = hookCache();
     const mock = {
-      params : { query: ''},
+      params: { query: ''},
       path: 'test-route',
       result: {
         _sys: {
@@ -45,7 +45,7 @@ describe('Cache Hook', () => {
       expect(data.cache.duration).to.equal(86400);
       expect(data.cache).to.not.have.property('parent');
       expect(data.cache).to.not.have.property('group');
-      expect(data.cache).to.not.have.property('expires_on');
+      expect(data.cache).to.not.have.property('expiresOn');
     });
   });
 });

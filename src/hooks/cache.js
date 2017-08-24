@@ -3,13 +3,16 @@
  * for the redis hook and the express middelware.
  * @todo add default value in config file
  */
+const defaults = {};
 
-export default function (options = {}) { // eslint-disable-line no-unused-vars
-  return function cache(hook) {
-    if(!hook.result.hasOwnProperty('cache')){
+export function cache(options) { // eslint-disable-line no-unused-vars
+  options = Object.assign({}, defaults, options);
+
+  return function (hook) {
+    if (!hook.result.hasOwnProperty('cache')) {
       hook.result.cache = {
         cached: false,
-        duration: options.duration || 3600 * 24 
+        duration: options.duration || 3600 * 24
       };
     }
     return Promise.resolve(hook);

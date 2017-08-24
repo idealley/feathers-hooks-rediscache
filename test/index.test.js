@@ -1,17 +1,17 @@
-const { expect } = require('chai');
-const plugin = require('../lib');
+import { expect } from 'chai';
+import { cacheRoutes, redisAfterHook, redisBeforeHook } from '../src';
 
 describe('feathers-hooks-rediscache', () => {
   it('loads routes', () => {
-    expect(typeof plugin.cacheRoutes).to.equal('function', 'It worked');
+    expect(typeof cacheRoutes).to.equal('function', 'It worked');
   });
   it('loads the after Redis Cache hook', () => {
-    expect(typeof plugin.redisAfterHook).to.equal('function', 'It worked');
+    expect(typeof redisAfterHook).to.equal('function', 'It worked');
   });
   it('loads the before Redis Cache hook', () => {
-    expect(typeof plugin.redisBeforeHook).to.equal('function', 'It worked');
+    expect(typeof redisBeforeHook).to.equal('function', 'It worked');
   });
   it('loads the cache hook', () => {
-    expect(typeof plugin.redisBeforeHook).to.equal('function', 'It worked');
+    expect(typeof redisBeforeHook).to.equal('function', 'It worked');
   });
 });

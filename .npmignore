@@ -8,3 +8,8 @@
 test/
 coverage/
 .github/
+.nyc_output
+coverage/
+node_modules/
+src/
+test/

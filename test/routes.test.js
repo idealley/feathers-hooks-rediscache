@@ -1,11 +1,9 @@
-const { expect } = require('chai');
-const plugin = require('../../lib');
+import { expect } from 'chai';
+import redis from 'redis';
+import RedisCache from '../src/routes/helpers/redis';
 
-const redis = require('redis');
 const client = redis.createClient();
-
-const helper = require('../../lib/routes/helpers/redis');
-const h = new helper.default(client);
+const h = new RedisCache(client);
 
 describe('Cache routes', () => {
 
@@ -23,8 +21,9 @@ describe('Cache functions', () => {
   it('removes an item from the cache', () => {
     client.get('cache-test-key', (err, reply) => {
       expect(reply).to.equal('value');
-    });
+    }); 
     return h.clearSingle('cache-test-key').then(data => {
+      console.log(data)
       expect(data).to.equal(true);
     });
     done();
@@ -48,31 +47,30 @@ describe('Cache functions', () => {
       expect(data).to.equal(true);
     });
     done(); 
-});
+  });
 
-it('removes all the item from a redis list array', () => {      
+  it('removes all the item from a redis list array', () => {      
     return h.clearGroup('group-does-not-exist').then(data => {
       expect(data).to.equal(false);
     });
     done(); 
-});
+  });
 
   it('really removed keys in a group', () => {
     client.get('path-2', (err, reply) => {
       expect(reply).to.be.equal(null)
     });
-  })
+  });
 
   it('really emptied the group', () => {
     client.lrange('group-test-key', 0, -1, (err, reply) => {
       expect(reply).to.be.an('array').that.is.empty;
     });
-  })
+  });
 
   it('removes the group key from redis', () => {
     client.del('group-test-key', (err, reply) => {
-      console.log(repply)
-      expect
+      expect(reply).to.equal(false);
     });
   });
 });
