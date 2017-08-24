@@ -25,6 +25,7 @@ export default class RedisCache {
           // console.log(reply[1]);
           return this.scan();
         }
+        return false;
       });
 
     });
@@ -58,7 +59,7 @@ export default class RedisCache {
         }
         this.clearAll(reply).then(
           this.client.del(key, (e, r) => {
-            resolve(r === 1 ? true : false);
+            resolve(r === 1);
           })
         );
       });
@@ -77,7 +78,7 @@ export default class RedisCache {
       for (i; i < array.length; i++) {
         this.clearSingle(array[i]).then(r => {
           if (i === array.length - 1) {
-            resolve(r ? true : false);
+            resolve(r);
           }
         });
       }

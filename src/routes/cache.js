@@ -37,6 +37,7 @@ router.get('/clear/single/:target?', (req, res) => {
 // clear a group
 router.get('/clear/group/:target', (req, res) => {
   client.get(`${req.params.target}`, (err, reply) => {
+    if (err) res.status(500).json({message: 'something went wrong'});
     const group = reply ? JSON.parse(reply).cache.group : '';
 
     h.clearGroup(group).then(r => {

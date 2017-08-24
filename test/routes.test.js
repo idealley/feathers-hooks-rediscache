@@ -23,7 +23,6 @@ describe('Cache functions', () => {
       expect(reply).to.equal('value');
     }); 
     return h.clearSingle('cache-test-key').then(data => {
-      console.log(data)
       expect(data).to.equal(true);
     });
     done();
