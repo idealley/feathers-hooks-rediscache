@@ -1,10 +1,6 @@
-# rediscache
-
+# Redis Cache
 [![Build Status](https://travis-ci.org/idealley/feathers-hooks-rediscache.png?branch=master)](https://travis-ci.org/idealley/feathers-hooks-rediscache)
-[![Code Climate](https://codeclimate.com/github/idealley/feathers-hooks-rediscache/badges/gpa.svg)](https://codeclimate.com/github/idealley/feathers-hooks-rediscache)
-[![Test Coverage](https://codeclimate.com/github/idealley/feathers-hooks-rediscache/badges/coverage.svg)](https://codeclimate.com/github/idealley/feathers-hooks-rediscache/coverage)
-[![Dependency Status](https://img.shields.io/david/idealley/feathers-hooks-rediscache.svg?style=flat-square)](https://david-dm.org/idealley/feathers-hooks-rediscache)
-[![Download Status](https://img.shields.io/npm/dm/rediscache.svg?style=flat-square)](https://www.npmjs.com/package/rediscache)
+
 
 > Cache any route with redis
 
