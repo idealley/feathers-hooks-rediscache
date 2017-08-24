@@ -1,0 +1,81 @@
+{
+  "name": "feathers-hooks-rediscache",
+  "description": "Cache any route with redis",
+  "version": "0.0.0",
+  "homepage": "https://github.com/idealley/feathers-hooks-rediscache",
+  "main": "lib/",
+  "keywords": [
+    "feathers",
+    "feathers-hooks",
+    "redis",
+    "cache"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/idealley/feathers-hooks-rediscache.git"
+  },
+  "author": {
+    "name": "Feathers contributors",
+    "email": "hello@feathersjs.com",
+    "url": "https://feathersjs.com"
+  },
+  "contributors": [],
+  "bugs": {
+    "url": "https://github.com/idealley/feathers-hooks-rediscache/issues"
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "scripts": {
+    "publish": "git push origin --tags && npm run changelog && git push origin",
+    "release:pre": "npm run add-dist && npm version prerelease && npm publish --tag pre",
+    "release:patch": "npm run add-dist && npm version patch && npm publish",
+    "release:minor": "npm run add-dist && npm version minor && npm publish",
+    "release:major": "npm run add-dist && npm version major && npm publish",
+    "changelog": "github_changelog_generator && git add CHANGELOG.md && git commit -am \"Updating changelog\"",
+    "lint": "semistandard lib/*.js lib/**/*.js test/*.js test/**/*.js --fix",
+    "mocha": "mocha --opts mocha.opts --watch --recursive",
+    "mocha-travis": "mocha --opts mocha.opts --recursive",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --opts mocha.opts",
+    "test": "npm run browserify && npm run lint && npm run coverage",
+    "clean": "shx rm -rf dist/ && shx mkdir -p dist",
+    "prepublish": "npm run browserify",
+    "browserify:dist": "browserify lib/index.js -t babelify --standalone rediscache --outfile dist/rediscache.js",
+    "browserify:min": "browserify lib/index.js -t babelify --standalone rediscache | uglifyjs > dist/rediscache.min.js",
+    "browserify": "npm run clean && npm run browserify:dist && npm run browserify:min",
+    "add-dist": "npm run browserify && git add dist/ --force && git commit -am \"Updating dist\"",
+    "watch": "babel --watch -d lib/ src/"
+  },
+  "semistandard": {
+    "sourceType": "module",
+    "env": [
+      "mocha"
+    ]
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "express": "^4.15.4",
+    "moment": "^2.18.1",
+    "querystring": "^0.2.0",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
+    "chai": "^3.5.0",
+    "coveralls": "^2.13.1",
+    "env-test": "^1.0.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^3.5.0",
+    "semistandard": "^11.0.0",
+    "shx": "^0.2.2",
+    "uglify-js": "^3.0.27"
+  }
+}
