@@ -18,6 +18,18 @@ describe('Cache functions', () => {
     client.rpush('group-test-key', ['path-1','path-2','path-3']);
   });
 
+  it('scans the index', () => {
+    return h.scan().then(data => {
+      expect(data).to.deep.equal(
+        [ 'group-test-key',
+          'path-2',
+          'path-1',
+          'path-3',
+          'cache-test-key' ]
+        );
+    });
+  });
+
   it('removes an item from the cache', () => {
     client.get('cache-test-key', (err, reply) => {
       expect(reply).to.equal('value');

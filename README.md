@@ -1,6 +1,6 @@
 # Redis Cache
 [![Build Status](https://travis-ci.org/idealley/feathers-hooks-rediscache.png?branch=master)](https://travis-ci.org/idealley/feathers-hooks-rediscache)
-
+[![Coverage Status](https://coveralls.io/repos/github/idealley/feathers-hooks-rediscache/badge.svg?branch=master)](https://coveralls.io/github/idealley/feathers-hooks-rediscache?branch=master)
 
 > Cache any route with redis
 
@@ -11,9 +11,11 @@ npm install feathers-hooks-rediscache --save
 ```
 
 ## Purpose
-The purpose of these hooks is to provide redis caching for APIs based on the request. Each request to an endpoint can be cached. All routes with variables and params can be cached.
+The purpose of these hooks is to provide redis caching for APIs enpoints. 
 
-The cache can be busted for an individual route, but also for groups. This is very useful if you have an API endpoint that creates a list of article, and a endpoint that returns an individual article. If the article is modified, the list of articles should, most likely be busted as well. This can be done calling one endpoint.
+Each request to an endpoint can be cached. Route variables and params are cached on a per request base. If a param to call is set to true and then to false to responses will be cached.
+
+The cache can be purged for an individual route, but also for a group of routes. This is very useful if you have an API endpoint that creates a list of articles, and a endpoint that returns an individual article. If the article is modified, the list of articles should, most likely, be purged as well. This can be done calling one endpoint.
 
 In the same fashion if you have many variant of the same endpoint that return similar content based on parameters you can bust the whole group as well:
 
