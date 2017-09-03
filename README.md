@@ -11,13 +11,13 @@ npm install feathers-hooks-rediscache --save
 ```
 
 ## Purpose
-The purpose of these hooks is to provide redis caching for APIs enpoints. 
+The purpose of these hooks is to provide redis caching for APIs endpoints. 
 
 Each request to an endpoint can be cached. Route variables and params are cached on a per request base. If a param to call is set to true and then to false to responses will be cached.
 
-The cache can be purged for an individual route, but also for a group of routes. This is very useful if you have an API endpoint that creates a list of articles, and a endpoint that returns an individual article. If the article is modified, the list of articles should, most likely, be purged as well. This can be done calling one endpoint.
+The cache can be purged for an individual route, but also for a group of routes. This is very useful if you have an API endpoint that creates a list of articles, and an endpoint that returns an individual article. If the article is modified, the list of articles should, most likely, be purged as well. This can be done by calling one endpoint.
 
-In the same fashion if you have many variant of the same endpoint that return similar content based on parameters you can bust the whole group as well:
+In the same fashion if you have many variants of the same endpoint that return similar content based on parameters you can bust the whole group as well:
 
 ```js
 /articles // list
@@ -30,9 +30,9 @@ These are all listed in a redis list under `group-articles` and can be busted by
 It was meant to be used over http, not tested with sockets.
 
 ## Documentation
-Add the different hooks. The order matters (see bellow). A `cache` object will be added to your response. This is usefull has other systems can use this object to purge the cache if needed.
+Add the different hooks. The order matters (see below). A `cache` object will be added to your response. This is useful as other systems can use this object to purge the cache if needed.
 
-availble routes:
+Available routes:
 ```js
 /cache/index // returns an array with all the keys
 /cache/clear // clears the whole cache
@@ -110,7 +110,7 @@ module.exports = {
 };
 ```
 * the duration is in seconds and will automatically expire
-* you may just use `cache()` with out specifying a duration, any request will be cached for a day
+* you may just use `cache()` without specifying a duration, any request will be cached for a day
 
 ## to does
 * add configuration for the default duration
