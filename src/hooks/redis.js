@@ -30,7 +30,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
           hook.result = JSON.parse(reply);
           resolve(hook);
           console.log(
-            `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}. 
+            `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.
             Expires on ${moment(hook.result.cache.expiresOn)}.`
           );
         } else {
@@ -46,7 +46,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
 
   return function (hook) {
     return new Promise(resolve => {
-      if (hook.result._sys.status === 200 && !hook.result.cache.cached) {
+      if (!hook.result.cache.cached) {
         const q = hook.params.query;
         let path = '';
 
@@ -76,7 +76,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
         client.rpush(hook.result.cache.group, path);
         if (process.env.NODE_ENV !== 'test') {
           console.log(
-            `${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache. 
+            `${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.
             Expires in ${moment.duration(duration).humanize()}.`);
         }
       }
