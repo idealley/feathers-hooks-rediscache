@@ -29,9 +29,11 @@ export function before(options) { // eslint-disable-line no-unused-vars
         if (reply) {
           hook.result = JSON.parse(reply);
           resolve(hook);
+          const duration = moment(hook.result.cache.expiresOn).format('DD MMMM YYYY - HH:mm:ss');
+
           console.log(
             `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.
-            Expires on ${moment(hook.result.cache.expiresOn)}.`
+            Expires on ${duration}.`
           );
         } else {
           resolve(hook);

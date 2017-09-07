@@ -13,7 +13,7 @@ describe('Cache Hook', () => {
         },
         cache: {
           cached: true,
-          duration: 8400
+          duration: 86400
         }
       }
     };
@@ -22,7 +22,7 @@ describe('Cache Hook', () => {
       const data = result.result;
 
       expect(data.cache.cached).to.equal(true);
-      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.duration).to.equal(86400);
     });
   });
 

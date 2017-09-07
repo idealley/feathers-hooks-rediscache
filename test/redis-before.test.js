@@ -14,8 +14,8 @@ describe('Redis Before Hook', () => {
         },
         cache: {
           cached: true,
-          duration: 8400,
-          expiresOn: moment().add(moment.duration(8400, 'seconds'))
+          duration: 3600 * 24 * 7,
+          expiresOn: moment().add(moment.duration(3600 * 24 * 7, 'seconds'))
         }
       }
     ));
@@ -27,8 +27,8 @@ describe('Redis Before Hook', () => {
         },
         cache: {
           cached: true,
-          duration: 8400,
-          expiresOn: moment().add(moment.duration(8400, 'seconds'))
+          duration: 3600 * 24 * 7,
+          expiresOn: moment().add(moment.duration(3600 * 24 * 7, 'seconds'))
         }
       }
     ));
@@ -40,8 +40,8 @@ describe('Redis Before Hook', () => {
         },
         cache: {
           cached: true,
-          duration: 8400,
-          expiresOn: moment().add(moment.duration(8400, 'seconds'))
+          duration: 3600 * 24 * 7,
+          expiresOn: moment().add(moment.duration(3600 * 24 * 7, 'seconds'))
         }
       }
     ));
@@ -53,8 +53,8 @@ describe('Redis Before Hook', () => {
         },
         cache: {
           cached: true,
-          duration: 8400,
-          expiresOn: moment().add(moment.duration(8400, 'seconds'))
+          duration: 3600 * 24 * 7,
+          expiresOn: moment().add(moment.duration(3600 * 24 * 7, 'seconds'))
         }
       }
     ));

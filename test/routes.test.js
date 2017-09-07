@@ -15,17 +15,19 @@ describe('Cache functions', () => {
     client.set('path-1', 'value-1');
     client.set('path-2', 'value-2');
     client.set('path-3', 'value-3');
-    client.rpush('group-test-key', ['path-1','path-2','path-3']);
+    client.rpush('group-test-key', ['path-1', 'path-2', 'path-3']);
   });
 
   it('scans the index', () => {
     return h.scan().then(data => {
       expect(data).to.deep.equal(
-        [ 'group-test-key',
+        [
+          'cache-test-key',
+          'group-test-key',
           'path-2',
-          'path-1',
           'path-3',
-          'cache-test-key' ]
+          'path-1'
+        ]
         );
     });
   });
@@ -33,18 +35,16 @@ describe('Cache functions', () => {
   it('removes an item from the cache', () => {
     client.get('cache-test-key', (err, reply) => {
       expect(reply).to.equal('value');
-    }); 
+    });
     return h.clearSingle('cache-test-key').then(data => {
       expect(data).to.equal(true);
     });
-    done();
   });
 
   it('returns false when an item does not exist', () => {
     return h.clearSingle('cache-does-not-exist').then(data => {
       expect(data).to.equal(false);
     });
-    done();
   });
 
   it('removed an item from the cache', () => {
@@ -53,23 +53,21 @@ describe('Cache functions', () => {
     });
   });
 
-  it('removes all the item from a redis list array', () => {      
+  it('removes all the item from a redis list array', () => {
     return h.clearGroup('group-test-key').then(data => {
       expect(data).to.equal(true);
     });
-    done(); 
   });
 
-  it('removes all the item from a redis list array', () => {      
+  it('removes all the item from a redis list array', () => {
     return h.clearGroup('group-does-not-exist').then(data => {
       expect(data).to.equal(false);
     });
-    done(); 
   });
 
   it('really removed keys in a group', () => {
     client.get('path-2', (err, reply) => {
-      expect(reply).to.be.equal(null)
+      expect(reply).to.be.equal(null);
     });
   });
 
