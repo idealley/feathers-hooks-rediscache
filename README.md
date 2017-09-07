@@ -19,7 +19,7 @@ The cache can be purged for an individual route, but also for a group of routes.
 
 In the same fashion if you have many variant of the same endpoint that return similar content based on parameters you can bust the whole group as well:
 
-```js
+```
 /articles // list
 /articles/article //individual item
 /articles/article?markdown=true // variant
@@ -33,7 +33,7 @@ It was meant to be used over http, not tested with sockets.
 Add the different hooks. The order matters (see bellow). A `cache` object will be added to your response. This is usefull has other systems can use this object to purge the cache if needed.
 
 availble routes:
-```js
+```
 /cache/index // returns an array with all the keys
 /cache/clear // clears the whole cache
 /cache/clear/single/:target // clears a single route if you want to purge a route with params just adds them target?param=1

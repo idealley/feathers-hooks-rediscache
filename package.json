@@ -34,7 +34,7 @@
     "build": "webpack --env build",
     "dev": "webpack --progress --colors --watch --env dev",
     "dev-travis": "webpack --env dev",
-    "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --compilers js:babel-core/register --colors ./test/*.test.js",
+    "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --compilers js:babel-core/register --colors ./test/lib/*.test.js",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.test.js",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
   },
