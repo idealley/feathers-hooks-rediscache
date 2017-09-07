@@ -20,14 +20,12 @@ describe('Cache functions', () => {
 
   it('scans the index', () => {
     return h.scan().then(data => {
-      expect(data).to.deep.equal(
-        [
+      expect(data).to.include(
           'cache-test-key',
           'group-test-key',
+          'path-1',
           'path-2',
-          'path-3',
-          'path-1'
-        ]
+          'path-3'
         );
     });
   });
