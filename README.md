@@ -50,7 +50,7 @@ const rest = require('feathers-rest');
 const hooks = require('feathers-hooks');
 const bodyParser = require('body-parser');
 const errorHandler = require('feathers-errors/handler');
-const routes = require('feathers-hooks-rediscache');
+const routes = require('feathers-hooks-rediscache').cacheRoutes;
 
 // Initialize the application
 const app = feathers()
