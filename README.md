@@ -11,7 +11,7 @@ npm install feathers-hooks-rediscache --save
 ```
 
 ## Purpose
-The purpose of these hooks is to provide redis caching for APIs endpoints. 
+The purpose of these hooks is to provide redis caching for APIs endpoints.
 
 Each request to an endpoint can be cached. Route variables and params are cached on a per request base. If a param to call is set to true and then to false to responses will be cached.
 
@@ -25,7 +25,7 @@ In the same fashion if you have many variants of the same endpoint that return s
 /articles/article?markdown=true // variant
 ```
 
-These are all listed in a redis list under `group-articles` and can be busted by calling `/cache/clear/group/article` or `/cache/clear/group/articles` it does not matter. All urls will be purged. 
+These are all listed in a redis list under `group-articles` and can be busted by calling `/cache/clear/group/article` or `/cache/clear/group/articles` it does not matter. All urls will be purged.
 
 It was meant to be used over http, not tested with sockets.
 
@@ -42,7 +42,7 @@ Available routes:
 
 ## Complete Example
 
-Here's an example of a Feathers server that uses `feathers-hooks-rediscache`. 
+Here's an example of a Feathers server that uses `feathers-hooks-rediscache`.
 
 ```js
 const feathers = require('feathers');
@@ -51,11 +51,13 @@ const hooks = require('feathers-hooks');
 const bodyParser = require('body-parser');
 const errorHandler = require('feathers-errors/handler');
 const routes = require('feathers-hooks-rediscache').cacheRoutes;
+const redisClient = require('feathers-hooks-rediscache').redisClient;
 
 // Initialize the application
 const app = feathers()
   .configure(rest())
   .configure(hooks())
+  .configure(redisClient)
   // Needed for parsing bodies (login)
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
@@ -112,9 +114,23 @@ module.exports = {
 * the duration is in seconds and will automatically expire
 * you may just use `cache()` without specifying a duration, any request will be cached for a day
 
+
+To configure the redis connection the feathers configuration system can be used.
+```js
+//config/default.json
+{
+  "host": "localhost",
+  "port": 3030,
+  "redis": {
+    "host": "my-redis-service.example.com",
+    "port": 1234
+  }
+}
+```
+* if no config is provided, default config from the [redis module](https://github.com/NodeRedis/node_redis) is used
+
 ## to does
 * add configuration for the default duration
-* add configuration for the redis db (now using defaults) 
 
 ## License
 

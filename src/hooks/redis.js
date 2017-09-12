@@ -1,10 +1,8 @@
 
 import qs from 'querystring';
 import moment from 'moment';
-import redis from 'redis';
 import chalk from 'chalk';
 
-const client = redis.createClient();
 const defaults = {};
 
 export function before(options) { // eslint-disable-line no-unused-vars
@@ -13,6 +11,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
   return function (hook) {
     return new Promise(resolve => {
       const q = hook.params.query || {};
+      let client = hook.app.get('redisClient');
       let path = '';
 
       if (!hook.id && Object.keys(q).length === 0) {
@@ -51,6 +50,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
         const q = hook.params.query || {};
+        let client = hook.app.get('redisClient');
         let path = '';
 
         if (!hook.id && Object.keys(q).length === 0) {
