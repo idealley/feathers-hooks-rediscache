@@ -12,14 +12,15 @@ export function before(options) { // eslint-disable-line no-unused-vars
 
   return function (hook) {
     return new Promise(resolve => {
+      const q = hook.params.query || {};
       let path = '';
 
-      if (!hook.id && Object.keys(hook.params.query).length === 0) {
+      if (!hook.id && Object.keys(q).length === 0) {
         path = `${hook.path}`;
-      } else if (!hook.id && Object.keys(hook.params.query).length > 0) {
-        path = `${hook.path}?${qs.stringify(hook.params.query)}`;
-      } else if (hook.id && Object.keys(hook.params.query).length > 0) {
-        path = `${hook.id}?${qs.stringify(hook.params.query)}`;
+      } else if (!hook.id && Object.keys(q).length > 0) {
+        path = `${hook.path}?${qs.stringify(q)}`;
+      } else if (hook.id && Object.keys(q).length > 0) {
+        path = `${hook.id}?${qs.stringify(q)}`;
       } else {
         path = `${hook.id}`;
       }
@@ -49,7 +50,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
   return function (hook) {
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
-        const q = hook.params.query;
+        const q = hook.params.query || {};
         let path = '';
 
         if (!hook.id && Object.keys(q).length === 0) {
