@@ -18,3 +18,14 @@ export function cache(options) { // eslint-disable-line no-unused-vars
     return Promise.resolve(hook);
   };
 };
+
+export function removeCacheInformation(options) { // eslint-disable-line no-unused-vars
+  options = Object.assign({}, defaults, options);
+
+  return function (hook) {
+    if (hook.result.hasOwnProperty('cache')) {
+      delete hook.result.cache;
+    }
+    return Promise.resolve(hook);
+  };
+};
