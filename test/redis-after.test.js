@@ -19,6 +19,11 @@ describe('Redis After Hook', () => {
           cached: false,
           duration: 8400
         }
+      },
+      app: {
+        get: (what) => {
+          return client;
+        }
       }
     };
 
@@ -46,6 +51,11 @@ describe('Redis After Hook', () => {
         cache: {
           cached: false,
           duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          return client;
         }
       }
     };
@@ -75,6 +85,11 @@ describe('Redis After Hook', () => {
           cached: false,
           duration: 8400
         }
+      },
+      app: {
+        get: (what) => {
+          return client;
+        }
       }
     };
 
@@ -103,6 +118,11 @@ describe('Redis After Hook', () => {
           cached: false,
           duration: 8400
         }
+      },
+      app: {
+        get: (what) => {
+          return client;
+        }
       }
     };
 
@@ -129,6 +149,11 @@ describe('Redis After Hook', () => {
         },
         cache: {
           cached: false
+        }
+      },
+      app: {
+        get: (what) => {
+          return client;
         }
       }
     };
