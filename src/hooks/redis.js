@@ -76,7 +76,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
         if (process.env.NODE_ENV !== 'test') {
           console.log(
             `${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.
-            Expires in ${moment.duration(duration).humanize()}.`);
+            Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
         }
       }
       resolve(hook);
