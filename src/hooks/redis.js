@@ -64,7 +64,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
         Object.assign(hook.result.cache, {
           cached: true,
           duration: duration,
-          expiresOn: moment().add(moment.duration(duration)),
+          expiresOn: moment().add(moment.duration(duration, 'seconds')),
           parent: hook.path,
           group: `group-${hook.path}`,
           key: path
