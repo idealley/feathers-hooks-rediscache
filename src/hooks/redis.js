@@ -12,16 +12,14 @@ export function before(options) { // eslint-disable-line no-unused-vars
     return new Promise(resolve => {
       const q = hook.params.query || {};
       let client = hook.app.get('redisClient');
-      let path = '';
+      let path = `${hook.path}`;
 
-      if (!hook.id && Object.keys(q).length === 0) {
-        path = `${hook.path}`;
-      } else if (!hook.id && Object.keys(q).length > 0) {
-        path = `${hook.path}?${qs.stringify(q)}`;
+      if (!hook.id && Object.keys(q).length > 0) {
+        path += `?${qs.stringify(q)}`;
       } else if (hook.id && Object.keys(q).length > 0) {
-        path = `${hook.id}?${qs.stringify(q)}`;
-      } else {
-        path = `${hook.id}`;
+        path += `/${hook.id}?${qs.stringify(q)}`;
+      } else if (hook.id && Object.keys(q).length === 0) {
+        path += `/${hook.id}`;
       }
 
       client.get(path, (err, reply) => {
@@ -51,16 +49,14 @@ export function after(options) { // eslint-disable-line no-unused-vars
       if (!hook.result.cache.cached) {
         const q = hook.params.query || {};
         let client = hook.app.get('redisClient');
-        let path = '';
+        let path = `${hook.path}`;
 
-        if (!hook.id && Object.keys(q).length === 0) {
-          path = `${hook.path}`;
-        } else if (!hook.id && Object.keys(q).length > 0) {
-          path = `${hook.path}?${qs.stringify(q)}`;
+        if (!hook.id && Object.keys(q).length > 0) {
+          path += `?${qs.stringify(q)}`;
         } else if (hook.id && Object.keys(q).length > 0) {
-          path = `${hook.id}?${qs.stringify(q)}`;
-        } else {
-          path = `${hook.id}`;
+          path += `/${hook.id}?${qs.stringify(q)}`;
+        } else if (hook.id && Object.keys(q).length === 0) {
+          path += `/${hook.id}`;
         }
         const duration = hook.result.cache.duration || 3600 * 24;
 
