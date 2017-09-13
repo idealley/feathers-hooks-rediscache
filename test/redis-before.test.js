@@ -65,7 +65,12 @@ describe('Redis Before Hook', () => {
     const mock = {
       params: { query: ''},
       path: '',
-      id: 'before-test-route'
+      id: 'before-test-route',
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
     };
 
     return hook(mock).then(result => {
@@ -80,7 +85,12 @@ describe('Redis Before Hook', () => {
     const mock = {
       params: { query: { full: true }},
       path: '',
-      id: 'before-test-route'
+      id: 'before-test-route',
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
     };
 
     return hook(mock).then(result => {
@@ -95,7 +105,12 @@ describe('Redis Before Hook', () => {
     const mock = {
       params: { query: ''},
       path: 'before-parent-route',
-      id: ''
+      id: '',
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
     };
 
     return hook(mock).then(result => {
@@ -110,7 +125,12 @@ describe('Redis Before Hook', () => {
     const mock = {
       params: { query: { full: true }},
       path: 'before-parent-route',
-      id: ''
+      id: '',
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
     };
 
     return hook(mock).then(result => {
@@ -125,7 +145,12 @@ describe('Redis Before Hook', () => {
     const mock = {
       params: { query: { full: true }},
       path: 'does-nothing',
-      id: ''
+      id: '',
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
     };
 
     return hook(mock).then(result => {
