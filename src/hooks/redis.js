@@ -14,12 +14,19 @@ export function before(options) { // eslint-disable-line no-unused-vars
       let client = hook.app.get('redisClient');
       let path = `${hook.path}`;
 
-      if (!hook.id && Object.keys(q).length > 0) {
-        path += `?${qs.stringify(q)}`;
-      } else if (hook.id && Object.keys(q).length > 0) {
-        path += `/${hook.id}?${qs.stringify(q)}`;
-      } else if (hook.id && Object.keys(q).length === 0) {
-        path += `/${hook.id}`;
+      if (hook.id) {
+        if (path.length !== 0) {
+          path += '/'
+        }
+        if (Object.keys(q).length > 0) {
+          path += `${hook.id}?${qs.stringify(q)}`;
+        } else {
+          path += `${hook.id}`;
+        }
+      } else {
+        if (Object.keys(q).length > 0) {
+          path += `?${qs.stringify(q)}`;
+        }
       }
 
       client.get(path, (err, reply) => {
@@ -51,12 +58,19 @@ export function after(options) { // eslint-disable-line no-unused-vars
         let client = hook.app.get('redisClient');
         let path = `${hook.path}`;
 
-        if (!hook.id && Object.keys(q).length > 0) {
-          path += `?${qs.stringify(q)}`;
-        } else if (hook.id && Object.keys(q).length > 0) {
-          path += `/${hook.id}?${qs.stringify(q)}`;
-        } else if (hook.id && Object.keys(q).length === 0) {
-          path += `/${hook.id}`;
+        if (hook.id) {
+          if (path.length !== 0) {
+            path += '/'
+          }
+          if (Object.keys(q).length > 0) {
+            path += `${hook.id}?${qs.stringify(q)}`;
+          } else {
+            path += `${hook.id}`;
+          }
+        } else {
+          if (Object.keys(q).length > 0) {
+            path += `?${qs.stringify(q)}`;
+          }
         }
         const duration = hook.result.cache.duration || 3600 * 24;
 
@@ -66,13 +80,15 @@ export function after(options) { // eslint-disable-line no-unused-vars
           duration: duration,
           expiresOn: moment().add(moment.duration(duration, 'seconds')),
           parent: hook.path,
-          group: `group-${hook.path}`,
+          group: hook.path ? `group-${hook.path}` : '',
           key: path
         });
 
         client.set(path, JSON.stringify(hook.result));
         client.expire(path, hook.result.cache.duration);
-        client.rpush(hook.result.cache.group, path);
+        if (hook.path) {
+          client.rpush(hook.result.cache.group, path);
+        }
         if (process.env.NODE_ENV !== 'test') {
           console.log(
             `${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.
