@@ -37,7 +37,7 @@ Add the different hooks. The order matters (see below). A `cache` object will be
 A cache object can be added to the default feathers configuration
 
 ```js
-  "cache" : {
+  "redisCache" : {
     "defaultDuration": 3600,
     "removePathFromCacheKey": true
   };

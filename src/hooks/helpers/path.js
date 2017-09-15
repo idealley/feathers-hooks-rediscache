@@ -3,10 +3,7 @@ import qs from 'querystring';
 function parsePath(hook, config) {
   const q = hook.params.query || {};
   const remove = config.removePathFromCacheKey || false;
-  let path = remove ? '' : `${hook.path}`;
-
-  console.log('key: ', remove);
-  console.log('config: ', config.removePathFromCacheKey);
+  let path = remove && hook.id ? '' : `${hook.path}`;
 
   if (hook.id) {
     if (path.length !== 0 && !remove) {

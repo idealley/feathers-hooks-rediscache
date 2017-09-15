@@ -20,10 +20,12 @@ export function before(options) { // eslint-disable-line no-unused-vars
           resolve(hook);
           const duration = moment(hook.result.cache.expiresOn).format('DD MMMM YYYY - HH:mm:ss');
 
-          console.log(
-            `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.
-            Expires on ${duration}.`
-          );
+          if (process.env.NODE_ENV !== 'test') {
+            console.log(
+              `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.
+              Expires on ${duration}.`
+            );
+          }  
         } else {
           resolve(hook);
         }
