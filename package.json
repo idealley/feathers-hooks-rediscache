@@ -1,7 +1,7 @@
 {
   "name": "feathers-hooks-rediscache",
   "description": "Cache any route with redis",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/idealley/feathers-hooks-rediscache",
   "main": "lib/library.js",
   "nyc": {
