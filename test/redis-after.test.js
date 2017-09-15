@@ -137,7 +137,49 @@ describe('Redis After Hook', () => {
     });
   });
 
-  it('caches a route with a parent', () => {
+  it('caches a route without a parent in the cache key', () => {
+    const hook = a();
+    const mock = {
+      params: { query: ''},
+      id: 'test-route',
+      path: 'parent',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          if (what === 'redisClient') return client;
+          if (what === 'redisCache') {
+            const cache = {
+              defaultDuration: 3600,
+              removePathFromCacheKey: true
+            };
+
+            return cache;
+          }
+          return undefined;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.parent).to.equal('parent');
+      expect(data.cache.group).to.equal('group-parent');
+      expect(data.cache.key).to.equal('test-route');
+    });
+  });
+
+  it('caches a route with a parent and params', () => {
     const hook = a();
     const mock = {
       params: { query: {full: true}},
@@ -167,6 +209,48 @@ describe('Redis After Hook', () => {
       expect(data.cache.parent).to.equal('parent');
       expect(data.cache.group).to.equal('group-parent');
       expect(data.cache.key).to.equal('parent/test-route?full=true');
+    });
+  });
+
+  it('caches a route without a parent in the cache key but with params', () => {
+    const hook = a();
+    const mock = {
+      params: { query: {full: true}},
+      id: 'test-route',
+      path: 'parent',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          if (what === 'redisClient') return client;
+          if (what === 'redisCache') {
+            const cache = {
+              defaultDuration: 3600,
+              removePathFromCacheKey: true
+            };
+
+            return cache;
+          }
+          return undefined;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.parent).to.equal('parent');
+      expect(data.cache.group).to.equal('group-parent');
+      expect(data.cache.key).to.equal('test-route?full=true');
     });
   });
 

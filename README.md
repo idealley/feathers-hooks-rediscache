@@ -52,12 +52,14 @@ const bodyParser = require('body-parser');
 const errorHandler = require('feathers-errors/handler');
 const routes = require('feathers-hooks-rediscache').cacheRoutes;
 const redisClient = require('feathers-hooks-rediscache').redisClient;
+const cache = require('feathers-hooks-rediscache').redisCache;
 
 // Initialize the application
 const app = feathers()
   .configure(rest())
   .configure(hooks())
   .configure(redisClient)
+  .configure(cache)
   // Needed for parsing bodies (login)
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))

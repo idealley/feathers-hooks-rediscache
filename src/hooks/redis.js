@@ -1,7 +1,6 @@
-
-import qs from 'querystring';
 import moment from 'moment';
 import chalk from 'chalk';
+import { parsePath } from './helpers/path';
 
 const defaults = {};
 
@@ -10,24 +9,9 @@ export function before(options) { // eslint-disable-line no-unused-vars
 
   return function (hook) {
     return new Promise(resolve => {
-      const q = hook.params.query || {};
-      let client = hook.app.get('redisClient');
-      let path = `${hook.path}`;
-
-      if (hook.id) {
-        if (path.length !== 0) {
-          path += '/'
-        }
-        if (Object.keys(q).length > 0) {
-          path += `${hook.id}?${qs.stringify(q)}`;
-        } else {
-          path += `${hook.id}`;
-        }
-      } else {
-        if (Object.keys(q).length > 0) {
-          path += `?${qs.stringify(q)}`;
-        }
-      }
+      const client = hook.app.get('redisClient');
+      const config = hook.app.get('cache');
+      const path = parsePath(hook, config);
 
       client.get(path, (err, reply) => {
         if (err !== null) resolve(hook);
@@ -54,25 +38,11 @@ export function after(options) { // eslint-disable-line no-unused-vars
   return function (hook) {
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
-        const q = hook.params.query || {};
-        let client = hook.app.get('redisClient');
-        let path = `${hook.path}`;
-
-        if (hook.id) {
-          if (path.length !== 0) {
-            path += '/'
-          }
-          if (Object.keys(q).length > 0) {
-            path += `${hook.id}?${qs.stringify(q)}`;
-          } else {
-            path += `${hook.id}`;
-          }
-        } else {
-          if (Object.keys(q).length > 0) {
-            path += `?${qs.stringify(q)}`;
-          }
-        }
-        const duration = hook.result.cache.duration || 3600 * 24;
+        const config = hook.app.get('redisCache');
+        const cachingDefault = config.defaultDuration || 3600 * 24;
+        const duration = hook.result.cache.duration || cachingDefault;
+        const client = hook.app.get('redisClient');
+        const path = parsePath(hook, config);
 
         // adding a cache object
         Object.assign(hook.result.cache, {
@@ -99,3 +69,4 @@ export function after(options) { // eslint-disable-line no-unused-vars
     });
   };
 };
+
