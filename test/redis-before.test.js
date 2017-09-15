@@ -162,9 +162,9 @@ describe('Redis Before Hook', () => {
   });
 
   after(() => {
-    client.del('before-test-route');
-    client.del('before-test-route?full=true');
-    client.del('before-parent-route');
-    client.del('before-parent-route?full=true');
+    // client.del('before-test-route');
+    // client.del('before-test-route?full=true');
+    // client.del('before-parent-route');
+    // client.del('before-parent-route?full=true');
   });
 });

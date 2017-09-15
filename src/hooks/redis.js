@@ -1,7 +1,6 @@
-
-import qs from 'querystring';
 import moment from 'moment';
 import chalk from 'chalk';
+import { parsePath } from './helpers/path';
 
 const defaults = {};
 
@@ -10,19 +9,9 @@ export function before(options) { // eslint-disable-line no-unused-vars
 
   return function (hook) {
     return new Promise(resolve => {
-      const q = hook.params.query || {};
-      let client = hook.app.get('redisClient');
-      let path = '';
-
-      if (!hook.id && Object.keys(q).length === 0) {
-        path = `${hook.path}`;
-      } else if (!hook.id && Object.keys(q).length > 0) {
-        path = `${hook.path}?${qs.stringify(q)}`;
-      } else if (hook.id && Object.keys(q).length > 0) {
-        path = `${hook.id}?${qs.stringify(q)}`;
-      } else {
-        path = `${hook.id}`;
-      }
+      const client = hook.app.get('redisClient');
+      const config = hook.app.get('cache');
+      const path = parsePath(hook, config);
 
       client.get(path, (err, reply) => {
         if (err !== null) resolve(hook);
@@ -49,41 +38,35 @@ export function after(options) { // eslint-disable-line no-unused-vars
   return function (hook) {
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
-        const q = hook.params.query || {};
-        let client = hook.app.get('redisClient');
-        let path = '';
-
-        if (!hook.id && Object.keys(q).length === 0) {
-          path = `${hook.path}`;
-        } else if (!hook.id && Object.keys(q).length > 0) {
-          path = `${hook.path}?${qs.stringify(q)}`;
-        } else if (hook.id && Object.keys(q).length > 0) {
-          path = `${hook.id}?${qs.stringify(q)}`;
-        } else {
-          path = `${hook.id}`;
-        }
-        const duration = hook.result.cache.duration || 3600 * 24;
+        const config = hook.app.get('redisCache');
+        const cachingDefault = config.defaultDuration || 3600 * 24;
+        const duration = hook.result.cache.duration || cachingDefault;
+        const client = hook.app.get('redisClient');
+        const path = parsePath(hook, config);
 
         // adding a cache object
         Object.assign(hook.result.cache, {
           cached: true,
           duration: duration,
-          expiresOn: moment().add(moment.duration(duration)),
+          expiresOn: moment().add(moment.duration(duration, 'seconds')),
           parent: hook.path,
-          group: `group-${hook.path}`,
+          group: hook.path ? `group-${hook.path}` : '',
           key: path
         });
 
         client.set(path, JSON.stringify(hook.result));
         client.expire(path, hook.result.cache.duration);
-        client.rpush(hook.result.cache.group, path);
+        if (hook.path) {
+          client.rpush(hook.result.cache.group, path);
+        }
         if (process.env.NODE_ENV !== 'test') {
           console.log(
             `${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.
-            Expires in ${moment.duration(duration).humanize()}.`);
+            Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
         }
       }
       resolve(hook);
     });
   };
 };
+
