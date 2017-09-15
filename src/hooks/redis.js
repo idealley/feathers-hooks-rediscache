@@ -25,7 +25,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
               `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.
               Expires on ${duration}.`
             );
-          }  
+          }
         } else {
           resolve(hook);
         }
