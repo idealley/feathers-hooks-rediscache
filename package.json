@@ -44,7 +44,6 @@
     "express": "^4.15.4",
     "moment": "^2.18.1",
     "qs": "^6.5.1",
-    "querystring": "^0.2.0",
     "redis": "^2.8.0"
   },
   "devDependencies": {
