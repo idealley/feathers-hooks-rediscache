@@ -11,9 +11,9 @@ npm install feathers-hooks-rediscache --save
 ```
 
 ## Purpose
-The purpose of these hooks is to provide redis caching for APIs endpoints.
+The purpose of these hooks is to provide redis caching for APIs endpoints. Using redis is a very good option for clusturing your API. As soon as a request is cached it is available to all the other nodes in the cluster, which is not true for usual in memory cache as each node has its own memory allowcated. This means that each node has to cache all requests individually.
 
-Each request to an endpoint can be cached. Route variables and params are cached on a per request base. If a param to call is set to true and then to false to responses will be cached.
+Each request to an endpoint can be cached. Route variables and params are cached on a per request base. If a param to call is set to true and then to false two responses will be cached.
 
 The cache can be purged for an individual route, but also for a group of routes. This is very useful if you have an API endpoint that creates a list of articles, and an endpoint that returns an individual article. If the article is modified, the list of articles should, most likely, be purged as well. This can be done by calling one endpoint.
 
@@ -135,7 +135,7 @@ module.exports = {
 };
 ```
 * the duration is in seconds and will automatically expire
-* you may just use `cache()` without specifying a duration, any request will be cached for a day
+* you may just use `cache()` without specifying a duration, any request will be cached for a day or with the global configured value (see configuration above).
 
 
 To configure the redis connection the feathers configuration system can be used.
@@ -151,9 +151,6 @@ To configure the redis connection the feathers configuration system can be used.
 }
 ```
 * if no config is provided, default config from the [redis module](https://github.com/NodeRedis/node_redis) is used
-
-## to does
-* add configuration for the default duration
 
 ## License
 
