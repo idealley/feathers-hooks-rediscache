@@ -39,18 +39,20 @@ A cache object can be added to the default feathers configuration
 ```js
   "redisCache" : {
     "defaultDuration": 3600,
+    "parseNestedRoutes": true,
     "removePathFromCacheKey": true
   };
 ```
-The default duration can be configured by passing the duration in seconds to the property `defualtDuration`.
-`removePathFromCacheKey` is an option that is useful when working with content and slugs. If when this option is turned on you can have the following issue. If your routes use IDs the you could have a conflict and the cache might return the wrong value:
+The default duration can be configured by passing the duration in seconds to the property `defaultDuration`.
+If your API uses nested routes like `/author/:authorId/book` you should turn on the option `parseNestedRoutes`. Otherwise you could have conflicting cache keys.
+`removePathFromCacheKey` is an option that is useful when working with content and slugs. If when this option is turned on you can have the following issue. If your routes use IDs then you could have a conflict and the cache might return the wrong value:
 
 ```
   user/123
   article/123
 ```
 
-both items with id `123` would be saved under the same cache key... thus replacing each other and returning one for the other, thus by default the key includes the path to diferenciate them. when working with content you could have an external system busting the cache that is not aware of your API routes. That system would know the slug, but cannot bust the cache as it would have to call `/cache/clear/single/:path/target`, with this option that system can simply call `:target` which would be the slug/alias of the article. 
+both items with id `123` would be saved under the same cache key... thus replacing each other and returning one for the other, thus by default the key includes the path to diferenciate them. when working with content you could have an external system busting the cache that is not aware of your API routes. That system would know the slug, but cannot bust the cache as it would have to call `/cache/clear/single/:path/target`, with this option that system can simply call `:target` which would be the slug/alias of the article.
 
 
 Available routes:

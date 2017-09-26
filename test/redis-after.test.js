@@ -111,6 +111,89 @@ describe('Redis After Hook', () => {
     });
   });
 
+  it('caches a parent route with setting to remove path from key...', () => {
+    const hook = a();
+    const mock = {
+      params: { query: ''},
+      path: 'test-route',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          if (what === 'redisClient') return client;
+          if (what === 'redisCache') {
+            const cache = {
+              defaultDuration: 3600,
+              removePathFromCacheKey: true
+            };
+
+            return cache;
+          }
+          return undefined;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.parent).to.equal('test-route');
+      expect(data.cache.group).to.equal('group-test-route');
+      expect(data.cache.key).to.equal('test-route');
+    });
+  });
+
+  it('caches a nested route with setting to parse it...', () => {
+    const hook = a();
+    const mock = {
+      params: { abcId: 123, query: ''},
+      path: 'test-route/:abcId',
+      id: 'nested-route',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          if (what === 'redisClient') return client;
+          if (what === 'redisCache') {
+            const cache = {
+              defaultDuration: 3600,
+              parseNestedRoutes: true
+            };
+
+            return cache;
+          }
+          return undefined;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.parent).to.equal('test-route/:abcId');
+      expect(data.cache.group).to.equal('group-test-route/:abcId');
+      expect(data.cache.key).to.equal('test-route/123/nested-route');
+    });
+  });
+
   it('caches a parent with params', () => {
     const hook = a();
     const mock = {
