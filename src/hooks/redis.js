@@ -17,8 +17,14 @@ export function before(options) { // eslint-disable-line no-unused-vars
         if (err !== null) resolve(hook);
         if (reply) {
           hook.result = JSON.parse(reply);
-          resolve(hook);
           const duration = moment(hook.result.cache.expiresOn).format('DD MMMM YYYY - HH:mm:ss');
+
+          if (hook.result.hasOwnProperty('wrapped')) {
+            const { wrapped } = hook.result;
+
+            hook.result = wrapped;
+          }
+          resolve(hook);
 
            /* istanbul ignore next */
           if (process.env.NODE_ENV !== 'test') {

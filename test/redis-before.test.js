@@ -58,6 +58,20 @@ describe('Redis Before Hook', () => {
         }
       }
     ));
+
+    client.set('before-wrapped', JSON.stringify(
+      {
+        wrapped: [
+          {title: 'title 1'},
+          {title: 'title 2'}
+        ],
+        cache: {
+          cached: true,
+          duration: 3600 * 24 * 7,
+          expiresOn: moment().add(moment.duration(3600 * 24 * 7, 'seconds'))
+        }
+      }
+    ));
   });
 
   it('retrives a cached object', () => {
@@ -97,6 +111,30 @@ describe('Redis Before Hook', () => {
       const data = result.result;
 
       expect(data.cache.cached).to.equal(true);
+    });
+  });
+
+  it('retrives a wrapped array', () => {
+    const hook = b();
+    const mock = {
+      params: { query: ''},
+      path: '',
+      id: 'before-wrapped',
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data).to.be.an('array').that.deep.equals([
+        {title: 'title 1'},
+        {title: 'title 2'}
+      ]);
+      expect(data.cache).to.equal(undefined);
     });
   });
 
@@ -162,9 +200,10 @@ describe('Redis Before Hook', () => {
   });
 
   after(() => {
-    // client.del('before-test-route');
-    // client.del('before-test-route?full=true');
-    // client.del('before-parent-route');
-    // client.del('before-parent-route?full=true');
+    client.del('before-test-route');
+    client.del('before-test-route?full=true');
+    client.del('before-parent-route');
+    client.del('before-wrapped');
+    client.del('before-parent-route?full=true');
   });
 });

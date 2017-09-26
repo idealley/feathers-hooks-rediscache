@@ -48,4 +48,30 @@ describe('Cache Hook', () => {
       expect(data.cache).to.not.have.property('expiresOn');
     });
   });
+
+  it('wraps arrays', () => {
+    const hook = hookCache();
+    const mock = {
+      params: { query: ''},
+      path: 'test-route-array',
+      result: [
+        {title: 'title 1'},
+        {title: 'title 2'}
+      ]
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.wrapped).to.be.an('array').that.deep.equals([
+        {title: 'title 1'},
+        {title: 'title 2'}
+      ]);
+      expect(data.cache.cached).to.equal(false);
+      expect(data.cache.duration).to.equal(86400);
+      expect(data.cache).to.not.have.property('parent');
+      expect(data.cache).to.not.have.property('group');
+      expect(data.cache).to.not.have.property('expiresOn');
+    });
+  });
 });

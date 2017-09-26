@@ -38,16 +38,49 @@ describe('Redis After Hook', () => {
       expect(data.cache.key).to.equal('test-route');
     });
   });
+  it('caches a route', () => {
+    const hook = a();
+    const mock = {
+      params: { query: ''},
+      id: 'test-route',
+      path: '',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
+    };
 
-  it('caches a parent route', () => {
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.parent).to.equal('');
+      expect(data.cache.group).to.equal('');
+      expect(data.cache.key).to.equal('test-route');
+    });
+  });
+
+  it('caches a parent route that returns an array', () => {
     const hook = a();
     const mock = {
       params: { query: ''},
       path: 'test-route',
       result: {
-        _sys: {
-          status: 200
-        },
+        wrapped: [
+          {title: 'title 1'},
+          {title: 'title 2'}
+        ],
         cache: {
           cached: false,
           duration: 8400

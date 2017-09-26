@@ -10,6 +10,12 @@ export function cache(options) { // eslint-disable-line no-unused-vars
 
   return function (hook) {
     if (!hook.result.hasOwnProperty('cache')) {
+      if (Array.isArray(hook.result)) {
+        const array = hook.result;
+
+        hook.result = {};
+        hook.result.wrapped = array;
+      }
       hook.result.cache = {
         cached: false,
         duration: options.duration || 3600 * 24
