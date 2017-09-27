@@ -87,7 +87,7 @@ const app = feathers()
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   // add the cache routes (endpoints) to the app
-  .use('/cache', routes())
+  .use('/cache', routes(app))
   .use(errorHandler());
 
 app.listen(3030);
@@ -159,3 +159,9 @@ To configure the redis connection the feathers configuration system can be used.
 Copyright (c) 2017
 
 Licensed under the [MIT license](LICENSE).
+
+## Change log
+
+### v0.3.0
+* introduces a breaking change: `.use('/cache', routes(app))`
+
