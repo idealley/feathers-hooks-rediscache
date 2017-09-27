@@ -1,10 +1,10 @@
 import express from 'express';
-import redis from 'redis';
+// import redis from 'redis';
 import RedisCache from './helpers/redis';
 
-function routes() {
+function routes(app) {
   const router = express.Router();
-  const client = redis.createClient();
+  const client = app.get('redisClient');
   const h = new RedisCache(client);
 
   // adding some cache routes
