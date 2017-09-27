@@ -335,6 +335,72 @@ describe('Redis After Hook', () => {
     });
   });
 
+  it('caches a route with a parent and a nested param', () => {
+    const hook = a();
+    const mock = {
+      params: { query: { id: { '$nin': '1' }}},
+      id: 'test-route',
+      path: 'parent',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.parent).to.equal('parent');
+      expect(data.cache.group).to.equal('group-parent');
+      expect(data.cache.key).to.equal('parent/test-route?id[$nin]=1');
+    });
+  });
+
+  it('caches a route with a parent and nested params', () => {
+    const hook = a();
+    const mock = {
+      params: { query: { id: { '$nin': '1', test: '2' }}},
+      id: 'test-route',
+      path: 'parent',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(8400);
+      expect(data.cache.parent).to.equal('parent');
+      expect(data.cache.group).to.equal('group-parent');
+      expect(data.cache.key).to.equal('parent/test-route?id[$nin]=1&id[test]=2');
+    });
+  });
+
   it('caches a route without a parent in the cache key but with params', () => {
     const hook = a();
     const mock = {

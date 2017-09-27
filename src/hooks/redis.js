@@ -20,6 +20,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
           resolve(hook);
           const duration = moment(hook.result.cache.expiresOn).format('DD MMMM YYYY - HH:mm:ss');
 
+           /* istanbul ignore next */
           if (process.env.NODE_ENV !== 'test') {
             console.log(
               `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.
@@ -61,6 +62,8 @@ export function after(options) { // eslint-disable-line no-unused-vars
         if (hook.path) {
           client.rpush(hook.result.cache.group, path);
         }
+
+         /* istanbul ignore next */
         if (process.env.NODE_ENV !== 'test') {
           console.log(
             `${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.
