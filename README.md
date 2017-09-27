@@ -87,7 +87,7 @@ const app = feathers()
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   // add the cache routes (endpoints) to the app
-  .use('/cache', routes)
+  .use('/cache', routes())
   .use(errorHandler());
 
 app.listen(3030);
