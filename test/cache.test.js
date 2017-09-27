@@ -63,7 +63,7 @@ describe('Cache Hook', () => {
     return hook(mock).then(result => {
       const data = result.result;
 
-      expect(data.wrapped).to.be.an('array').that.deep.equals([
+      expect(data.cache.wrapped).to.be.an('array').that.deep.equals([
         {title: 'title 1'},
         {title: 'title 2'}
       ]);

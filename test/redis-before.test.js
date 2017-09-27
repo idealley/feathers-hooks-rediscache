@@ -61,11 +61,11 @@ describe('Redis Before Hook', () => {
 
     client.set('before-wrapped', JSON.stringify(
       {
-        wrapped: [
-          {title: 'title 1'},
-          {title: 'title 2'}
-        ],
         cache: {
+          wrapped: [
+            {title: 'title 1'},
+            {title: 'title 2'}
+          ],
           cached: true,
           duration: 3600 * 24 * 7,
           expiresOn: moment().add(moment.duration(3600 * 24 * 7, 'seconds'))

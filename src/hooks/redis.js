@@ -16,14 +16,15 @@ export function before(options) { // eslint-disable-line no-unused-vars
       client.get(path, (err, reply) => {
         if (err !== null) resolve(hook);
         if (reply) {
-          hook.result = JSON.parse(reply);
-          const duration = moment(hook.result.cache.expiresOn).format('DD MMMM YYYY - HH:mm:ss');
+          let data = JSON.parse(reply);
+          const duration = moment(data.cache.expiresOn).format('DD MMMM YYYY - HH:mm:ss');
 
-          if (hook.result.hasOwnProperty('wrapped')) {
-            const { wrapped } = hook.result;
+          if (data.cache.hasOwnProperty('wrapped')) {
+            const { wrapped } = data.cache;
 
-            hook.result = wrapped;
+            data = wrapped;
           }
+          hook.result = data;
           resolve(hook);
 
            /* istanbul ignore next */
