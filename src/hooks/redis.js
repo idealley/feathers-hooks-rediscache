@@ -10,8 +10,8 @@ export function before(options) { // eslint-disable-line no-unused-vars
   return function (hook) {
     return new Promise(resolve => {
       const client = hook.app.get('redisClient');
-      const config = hook.app.get('redisCache');
-      const path = parsePath(hook, config);
+      const cacheOptions = hook.app.get('redisCache');
+      const path = parsePath(hook, cacheOptions);
 
       client.get(path, (err, reply) => {
         if (err !== null) resolve(hook);
@@ -48,11 +48,11 @@ export function after(options) { // eslint-disable-line no-unused-vars
   return function (hook) {
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
-        const config = hook.app.get('redisCache');
-        const cachingDefault = config ? config.defaultDuration : 3600 * 24;
+        const cacheOptions = hook.app.get('redisCache');
+        const cachingDefault = cacheOptions.defaultDuration ? cacheOptions.defaultDuration : 3600 * 24;
         const duration = hook.result.cache.duration || cachingDefault;
         const client = hook.app.get('redisClient');
-        const path = parsePath(hook, config);
+        const path = parsePath(hook, cacheOptions);
 
         // adding a cache object
         Object.assign(hook.result.cache, {
