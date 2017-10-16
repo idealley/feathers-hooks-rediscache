@@ -12,10 +12,10 @@ function parseNestedPath(path, params) {
   return path;
 }
 
-function parsePath(hook, config) {
+function parsePath(hook, config = {removePathFromCacheKey: false, parseNestedRoutes: false}) {
   const q = hook.params.query || {};
-  const remove = config.removePathFromCacheKey || false;
-  const parseNestedRoutes = config.parseNestedRoutes || false;
+  const remove = config.removePathFromCacheKey;
+  const parseNestedRoutes = config.parseNestedRoutes;
   let path = remove && hook.id ? '' : `${hook.path}`;
 
   if (!remove && parseNestedRoutes) {

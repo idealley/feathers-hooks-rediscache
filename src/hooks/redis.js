@@ -49,7 +49,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
         const config = hook.app.get('redisCache');
-        const cachingDefault = config.defaultDuration || 3600 * 24;
+        const cachingDefault = config ? config.defaultDuration : 3600 * 24;
         const duration = hook.result.cache.duration || cachingDefault;
         const client = hook.app.get('redisClient');
         const path = parsePath(hook, config);
