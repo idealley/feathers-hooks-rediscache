@@ -18,7 +18,7 @@ function routes(app) {
 
   // clear a unique route
   router.get('/clear/single/:target?', (req, res) => {
-    const t = req.url.split('/')[4];
+    const t = req.url.split('/')[3];
 
     if (t.includes('?')) {
       h.clearSingle(t).then(r => {
