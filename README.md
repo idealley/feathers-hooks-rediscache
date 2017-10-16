@@ -11,7 +11,7 @@ npm install feathers-hooks-rediscache --save
 ```
 
 ## Purpose
-The purpose of these hooks is to provide redis caching for APIs endpoints. Using redis is a very good option for clusturing your API. As soon as a request is cached it is available to all the other nodes in the cluster, which is not true for usual in memory cache as each node has its own memory allowcated. This means that each node has to cache all requests individually.
+The purpose of these hooks is to provide redis caching for APIs endpoints. Using redis is a very good option for clusturing your API. As soon as a request is cached it is available to all the other nodes in the cluster, which is not true for usual in memory cache as each node has its own memory allocated. This means that each node has to cache all requests individually.
 
 Each request to an endpoint can be cached. Route variables and params are cached on a per request base. If a param to call is set to true and then to false two responses will be cached.
 
@@ -19,24 +19,40 @@ The cache can be purged for an individual route, but also for a group of routes.
 
 In the same fashion if you have many variants of the same endpoint that return similar content based on parameters you can bust the whole group as well:
 
-```
-/articles // list
-/articles/article //individual item
-/articles/article?markdown=true // variant
+```js
+'/articles' // list
+'/articles/article' //individual item
+'/articles/article?markdown=true' // variant
 ```
 
 These are all listed in a redis list under `group-articles` and can be busted by calling `/cache/clear/group/article` or `/cache/clear/group/articles` it does not matter. All urls will be purged.
 
-It was meant to be used over http, not tested with sockets.
+It was meant to be used over http, not yet tested with sockets.
+
+## Availabe hooks
+More details and example use bellow
+
+### Before
+* `redisBeforeHook` - retrives the data from redis
+
+### After
+* `hookCache` - set defaults caching duration, an object can be passed with the duration in seconds
+* `redisAfterHook` - saves to redis
+* `hookRemoveCacheInformation` - removes the cache object
+
 
 ## Documentation
 Add the different hooks. The order matters (see below). A `cache` object will be added to your response. This is useful as other systems can use this object to purge the cache if needed.
+
+If the cache object is not needed/wanted it can be removed with the after hook `hookRemoveCacheInformation()`
 
 ### Configuration
 
 A cache object can be added to the default feathers configuration
 
 ```js
+//config/default.json
+
   "redisCache" : {
     "defaultDuration": 3600,
     "parseNestedRoutes": true,
@@ -47,9 +63,9 @@ The default duration can be configured by passing the duration in seconds to the
 If your API uses nested routes like `/author/:authorId/book` you should turn on the option `parseNestedRoutes`. Otherwise you could have conflicting cache keys.
 `removePathFromCacheKey` is an option that is useful when working with content and slugs. If when this option is turned on you can have the following issue. If your routes use IDs then you could have a conflict and the cache might return the wrong value:
 
-```
-  user/123
-  article/123
+```js
+  'user/123'
+  'article/123'
 ```
 
 both items with id `123` would be saved under the same cache key... thus replacing each other and returning one for the other, thus by default the key includes the path to diferenciate them. when working with content you could have an external system busting the cache that is not aware of your API routes. That system would know the slug, but cannot bust the cache as it would have to call `/cache/clear/single/:path/target`, with this option that system can simply call `:target` which would be the slug/alias of the article.
@@ -57,10 +73,10 @@ both items with id `123` would be saved under the same cache key... thus replaci
 
 Available routes:
 ```js
-/cache/index // returns an array with all the keys
-/cache/clear // clears the whole cache
-/cache/clear/single/:target // clears a single route if you want to purge a route with params just adds them target?param=1
-/cache/clear/group/:target // clears a group
+'/cache/index' // returns an array with all the keys
+'/cache/clear' // clears the whole cache
+'/cache/clear/single/:target' // clears a single route if you want to purge a route with params just adds them target?param=1
+'/cache/clear/group/:target' // clears a group
 ```
 
 ## Complete Example
@@ -75,14 +91,14 @@ const bodyParser = require('body-parser');
 const errorHandler = require('feathers-errors/handler');
 const routes = require('feathers-hooks-rediscache').cacheRoutes;
 const redisClient = require('feathers-hooks-rediscache').redisClient;
-const cache = require('feathers-hooks-rediscache').redisCache;
 
 // Initialize the application
 const app = feathers()
   .configure(rest())
   .configure(hooks())
+  // configure the redis client
   .configure(redisClient)
-  .configure(cache)
+
   // Needed for parsing bodies (login)
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
