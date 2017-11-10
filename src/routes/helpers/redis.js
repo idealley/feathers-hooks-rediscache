@@ -5,7 +5,6 @@ export default class RedisCache {
 
   /**
    * scan the redis index
-   * @param {Object} redis - redis client
    */
   scan() {
     // starts at 0 if cursor is again 0 it means the iteration is finished
@@ -16,6 +15,7 @@ export default class RedisCache {
         if (err) {
           reject(err);
         }
+
         cursor = reply[0];
         if (cursor === '0') {
           resolve(reply[1]);
@@ -28,6 +28,45 @@ export default class RedisCache {
         return false;
       });
 
+    });
+  }
+
+  /**
+   * Async scan of the redis index
+   * Do not for get to passin a Set
+   * myResults = new Set();
+   *
+   * scanAsync('0', "NOC-*[^listen]*", myResults).map(
+   *   myResults => { console.log( myResults); }
+   * );
+   *
+   * @param {String} cursor - string '0'
+   * @param {String} patern - string '0'
+   * @param {Set} returnSet - pass a set to have unique keys
+   */
+  scanAsync(cursor, pattern, returnSet) {
+    // starts at 0 if cursor is again 0 it means the iteration is finished
+
+    return new Promise((resolve, reject) => {
+      this.client.scan(cursor, 'MATCH', pattern, 'COUNT', '100', (err, reply) => {
+
+        if (err) {
+          reject(err);
+        }
+
+        cursor = reply[0];
+        const keys = reply[1];
+
+        keys.forEach((key, i) => {
+          returnSet.add(key);
+        });
+
+        if (cursor === '0') {
+          resolve(Array.from(returnSet));
+        }
+
+        return this.scanAsync(cursor, pattern, returnSet);
+      });
     });
   }
 

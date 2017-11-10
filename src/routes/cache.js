@@ -51,7 +51,9 @@ function routes(app) {
 
   // add route to display cache index
   router.get('/index', (req, res) => {
-    h.scan()
+    let results = new Set();
+
+    h.scanAsync('0', '*', results)
       .then(data => {
         res.status(200).json(data);
       })

@@ -30,6 +30,20 @@ describe('Cache functions', () => {
     });
   });
 
+  it('Async scan the index', () => {
+    let myResult = new Set();
+
+    return h.scanAsync('0', '*', myResult).then(data => {
+      expect(data).to.include(
+          'cache-test-key',
+          'group-test-key',
+          'path-1',
+          'path-2',
+          'path-3'
+        );
+    });
+  });
+
   it('removes an item from the cache', () => {
     client.get('cache-test-key', (err, reply) => {
       expect(reply).to.equal('value');
