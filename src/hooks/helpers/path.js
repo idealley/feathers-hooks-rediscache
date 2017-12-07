@@ -1,9 +1,8 @@
 import qs from 'qs';
 
 function parseNestedPath(path, params) {
-
+  const re = new RegExp(':([^\\/\\?]+)\\??', 'g');
   let match = null;
-  let re = new RegExp(':([^\\/\\?]+)\\??', 'g');
 
   while ((match = re.exec(path)) !== null) {
     if (Object.keys(params).includes(match[1])) {
