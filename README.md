@@ -177,7 +177,10 @@ Copyright (c) 2017
 Licensed under the [MIT license](LICENSE).
 
 ## Change log
-
+### v0.3.5
+* Now the ability to parse optional params in nested routes. Thank you @oppodeldoc
+### v0.3.4
+* new scan method that takes params and a Set to make sure keys are unique.
 ### v0.3.0
 * introduces a breaking change: `.use('/cache', routes(app))`
 
