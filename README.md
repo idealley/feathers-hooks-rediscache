@@ -177,6 +177,8 @@ Copyright (c) 2017
 Licensed under the [MIT license](LICENSE).
 
 ## Change log
+### v0.3.6
+* Fixed config issue, Now using minified version. Thank you @oppodeldoc
 ### v0.3.5
 * Now the ability to parse optional params in nested routes. Thank you @oppodeldoc
 ### v0.3.4
