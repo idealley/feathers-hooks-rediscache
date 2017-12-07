@@ -29,7 +29,7 @@ These are all listed in a redis list under `group-articles` and can be busted by
 
 It was meant to be used over http, not yet tested with sockets.
 
-## Availabe hooks
+## Available hooks
 More details and example use bellow
 
 ### Before
@@ -183,4 +183,3 @@ Licensed under the [MIT license](LICENSE).
 * new scan method that takes params and a Set to make sure keys are unique.
 ### v0.3.0
 * introduces a breaking change: `.use('/cache', routes(app))`
-
