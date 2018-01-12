@@ -4,11 +4,22 @@
 
 > Cache any route with redis
 
+## Releases
+* Versions 1.x.x are compatible with Feathersjs 3.x.x
+* Versions 0.x.x are compatible with Feathersjs 2.x.x
+
 ## Installation
 
+### Feathers 3.x.x
 ```
 npm install feathers-hooks-rediscache --save
 ```
+
+### Feathers 2.x.x
+If you do not use nested routes you can install version 1.x.x if not:
+```
+  npm install feathers-hooks-rediscache@0.3.6 --save-exact
+```    
 
 ## Purpose
 The purpose of these hooks is to provide redis caching for APIs endpoints. Using redis is a very good option for clusturing your API. As soon as a request is cached it is available to all the other nodes in the cluster, which is not true for usual in memory cache as each node has its own memory allocated. This means that each node has to cache all requests individually.
@@ -177,6 +188,9 @@ Copyright (c) 2017
 Licensed under the [MIT license](LICENSE).
 
 ## Change log
+### v1.0.0
+* Compatibility with Feathers 3.x.x
+* Nested routes fix #3
 ### v0.3.6
 * Fixed config issue, Now using minified version. Thank you @oppodeldoc
 ### v0.3.5
