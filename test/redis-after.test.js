@@ -184,7 +184,7 @@ describe('Redis After Hook', () => {
       expect(data.cache.key).to.equal('test-route');
     });
   });
-  
+
   it('caches a nested route with setting to parse it...', () => {
     const hook = a();
     const mock = {
