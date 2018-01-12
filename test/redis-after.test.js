@@ -188,7 +188,12 @@ describe('Redis After Hook', () => {
   it('caches a nested route with setting to parse it...', () => {
     const hook = a();
     const mock = {
-      params: { abcId: 123, query: ''},
+      params: {
+        route: {
+          abcId: 123
+        },
+        query: ''
+      },
       path: 'test-route/:abcId',
       id: 'nested-route',
       result: {
@@ -230,7 +235,12 @@ describe('Redis After Hook', () => {
   it('caches a nested route with optional params set', () => {
     const hook = a();
     const mock = {
-      params: { abcId: 123, query: ''},
+      params: {
+        route: {
+          abcId: 123
+        },
+        query: ''
+      },
       path: 'test-route/:abcId?',
       id: 'nested-route',
       result: {
@@ -272,7 +282,12 @@ describe('Redis After Hook', () => {
   it('caches a route with optional params set,', () => {
     const hook = a();
     const mock = {
-      params: { abcId: 123, query: ''},
+      params: {
+        route: {
+          abcId: 123
+        },
+        query: ''
+      },
       path: 'test-route/:abcId?',
       id: '',
       result: {

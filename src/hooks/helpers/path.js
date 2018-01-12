@@ -5,10 +5,11 @@ function parseNestedPath(path, params) {
   let match = null;
 
   while ((match = re.exec(path)) !== null) {
-    if (Object.keys(params).includes(match[1])) {
-      path = path.replace(match[0], params[match[1]]);
+    if (Object.keys(params.route).includes(match[1])) {
+      path = path.replace(match[0], params.route[match[1]]);
     }
   }
+
   return path;
 }
 
