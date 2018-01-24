@@ -9,6 +9,7 @@ function parseNestedPath(path, params) {
       path = path.replace(match[0], params.route[match[1]]);
     }
   }
+
   return path;
 }
 
