@@ -23,13 +23,15 @@ function routes(app) {
     if (t.includes('?')) {
       h.clearSingle(t).then(r => {
         res.status(200).json({
-          message: `cache ${r ? '' : 'already'} cleared for key (with params): ${t}`
+          message: `cache ${r ? '' : 'already'} cleared for key (with params): ${t}`,
+          status: r ? 200 : 204
         });
       });
     } else {
       h.clearSingle(req.params.target).then(r => {
         res.status(200).json({
-          message: `cache ${r ? '' : 'already'} cleared for key (without params): ${req.params.target}`
+          message: `cache ${r ? '' : 'already'} cleared for key (without params): ${req.params.target}`,
+          status: r ? 200 : 204
         });
       });
     }
@@ -43,7 +45,8 @@ function routes(app) {
 
       h.clearGroup(group).then(r => {
         res.status(200).json({
-          message: `cache ${r ? '' : 'already'} cleared for the group key: ${req.params.target}`
+          message: `cache ${r ? '' : 'already'} cleared for the group key: ${req.params.target}`,
+          status: r ? 200 : 204
         });
       });
     });
