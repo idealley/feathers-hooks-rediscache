@@ -1,6 +1,6 @@
 # Redis Cache
 [![Build Status](https://travis-ci.org/idealley/feathers-hooks-rediscache.png?branch=master)](https://travis-ci.org/idealley/feathers-hooks-rediscache)
-[![Coverage Status](https://coveralls.io/repos/github/idealley/feathers-hooks-rediscache/badge.svg?branch=master)](https://coveralls.io/github/idealley/feathers-hooks-rediscache?branch=master)
+[![codecov](https://codecov.io/gh/idealley/feathers-hooks-rediscache/branch/master/graph/badge.svg)](https://codecov.io/gh/idealley/feathers-hooks-rediscache)
 
 > Cache any route with redis
 
