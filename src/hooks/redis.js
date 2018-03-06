@@ -27,12 +27,10 @@ export function before(options) { // eslint-disable-line no-unused-vars
           hook.result = data;
           resolve(hook);
 
-           /* istanbul ignore next */
+          /* istanbul ignore next */
           if (process.env.NODE_ENV !== 'test') {
-            console.log(
-              `${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.
-              Expires on ${duration}.`
-            );
+            console.log(`${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.`);
+            console.log(`Expires on ${duration}.`);
           }
         } else {
           resolve(hook);
@@ -70,11 +68,10 @@ export function after(options) { // eslint-disable-line no-unused-vars
           client.rpush(hook.result.cache.group, path);
         }
 
-         /* istanbul ignore next */
+        /* istanbul ignore next */
         if (process.env.NODE_ENV !== 'test') {
-          console.log(
-            `${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.
-            Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
+          console.log(`${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.`);
+          console.log(`Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
         }
       }
       resolve(hook);

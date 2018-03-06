@@ -45,7 +45,7 @@ describe('Cache functions', () => {
   });
 
   it('removes an item from the cache', () => {
-    client.get('cache-test-key', (err, reply) => {
+    client.get('cache-test-key', reply => {
       expect(reply).to.equal('value');
     });
     return h.clearSingle('cache-test-key').then(data => {
@@ -60,8 +60,8 @@ describe('Cache functions', () => {
   });
 
   it('removed an item from the cache', () => {
-    client.get('cache-test-key', (err, reply) => {
-      expect(reply).to.equal('tedfst');
+    client.get('cache-test-key', reply => {
+      expect(reply).to.equal(null);
     });
   });
 
@@ -78,20 +78,20 @@ describe('Cache functions', () => {
   });
 
   it('really removed keys in a group', () => {
-    client.get('path-2', (err, reply) => {
+    client.get('path-2', reply => {
       expect(reply).to.be.equal(null);
     });
   });
 
   it('really emptied the group', () => {
-    client.lrange('group-test-key', 0, -1, (err, reply) => {
+    client.lrange('group-test-key', 0, -1, reply => {
       expect(reply).to.be.an('array').that.is.empty;
     });
   });
 
   it('removes the group key from redis', () => {
-    client.del('group-test-key', (err, reply) => {
-      expect(reply).to.equal(false);
+    client.del('group-test-key', reply => {
+      expect(reply).to.equal(0);
     });
   });
 });
