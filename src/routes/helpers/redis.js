@@ -6,30 +6,30 @@ export default class RedisCache {
   /**
    * scan the redis index
    */
-  scan() {
-    // starts at 0 if cursor is again 0 it means the iteration is finished
-    let cursor = '0';
+  // scan() {
+  //   // starts at 0 if cursor is again 0 it means the iteration is finished
+  //   let cursor = '0';
 
-    return new Promise((resolve, reject) => {
-      this.client.scan(cursor, 'MATCH', '*', 'COUNT', '100', (err, reply) => {
-        if (err) {
-          reject(err);
-        }
+  //   return new Promise((resolve, reject) => {
+  //     this.client.scan(cursor, 'MATCH', '*', 'COUNT', '100', (err, reply) => {
+  //       if (err) {
+  //         reject(err);
+  //       }
 
-        cursor = reply[0];
-        if (cursor === '0') {
-          resolve(reply[1]);
-        } else {
-          // do your processing
-          // reply[1] is an array of matched keys.
-          // console.log(reply[1]);
-          return this.scan();
-        }
-        return false;
-      });
+  //       cursor = reply[0];
+  //       if (cursor === '0') {
+  //         resolve(reply[1]);
+  //       } else {
+  //         // do your processing
+  //         // reply[1] is an array of matched keys.
+  //         // console.log(reply[1]);
+  //         return this.scan();
+  //       }
+  //       return false;
+  //     });
 
-    });
-  }
+  //   });
+  // }
 
   /**
    * Async scan of the redis index
@@ -44,31 +44,31 @@ export default class RedisCache {
    * @param {String} patern - string '0'
    * @param {Set} returnSet - pass a set to have unique keys
    */
-  scanAsync(cursor, pattern, returnSet) {
-    // starts at 0 if cursor is again 0 it means the iteration is finished
+  // scanAsync(cursor, pattern, returnSet) {
+  //   // starts at 0 if cursor is again 0 it means the iteration is finished
 
-    return new Promise((resolve, reject) => {
-      this.client.scan(cursor, 'MATCH', pattern, 'COUNT', '100', (err, reply) => {
+  //   return new Promise((resolve, reject) => {
+  //     this.client.scan(cursor, 'MATCH', pattern, 'COUNT', '100', (err, reply) => {
 
-        if (err) {
-          reject(err);
-        }
+  //       if (err) {
+  //         reject(err);
+  //       }
 
-        cursor = reply[0];
-        const keys = reply[1];
+  //       cursor = reply[0];
+  //       const keys = reply[1];
 
-        keys.forEach((key, i) => {
-          returnSet.add(key);
-        });
+  //       keys.forEach((key, i) => {
+  //         returnSet.add(key);
+  //       });
 
-        if (cursor === '0') {
-          resolve(Array.from(returnSet));
-        }
+  //       if (cursor === '0') {
+  //         resolve(Array.from(returnSet));
+  //       }
 
-        return this.scanAsync(cursor, pattern, returnSet);
-      });
-    });
-  }
+  //       return this.scanAsync(cursor, pattern, returnSet);
+  //     });
+  //   });
+  // }
 
   /**
    * Clean single item from the cache

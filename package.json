@@ -5,6 +5,14 @@
   "homepage": "https://github.com/idealley/feathers-hooks-rediscache",
   "main": "lib/library.min.js",
   "nyc": {
+    "require": [
+      "babel-register"
+    ],
+    "reporter": [
+      "text-lcov",
+      "lcov",
+      "text"
+    ],
     "sourceMap": false,
     "instrument": false
   },
@@ -34,13 +42,16 @@
     "build": "webpack --env build --mode production",
     "dev": "webpack --progress --colors --watch --env dev --mode development",
     "dev-travis": "webpack --env dev && npm run test",
-    "test": "NODE_ENV=test nyc --reporter=text-lcov --reporter=text mocha --compilers js:babel-core/register --colors ./test/*.test.js",
-    "test:redis-after": "NODE_ENV=test nyc --reporter=text-lcov --reporter=text mocha --compilers js:babel-core/register --colors ./test/redis-after.test.js --watch",
-    "test:redis-before": "NODE_ENV=test nyc --reporter=text-lcov --reporter=text mocha --compilers js:babel-core/register --colors ./test/redis-before.test.js --watch",
-    "test:routes": "NODE_ENV=test nyc --reporter=text-lcov --reporter=text mocha --compilers js:babel-core/register --colors ./test/routes.test.js --watch",
-    "test:cache-hook": "NODE_ENV=test nyc --reporter=text-lcov --reporter=text mocha --compilers js:babel-core/register --colors ./test/cache.test.js --watch",
+    "mocha": "mocha --require babel-core/register --colors ./test/*.test.js",
+    "reporter": "NODE_ENV=test nyc npm run mocha",
+    "test": "npm run reporter",
+    "test:redis-after": "NODE_ENV=test nyc mocha --require babel-core/register --colors ./test/redis-after.test.js --watch",
+    "test:redis-before": "NODE_ENV=test nyc mocha --compilers js:babel-core/register --colors ./test/redis-before.test.js --watch",
+    "test:routes": "NODE_ENV=test nyc mocha --compilers js:babel-core/register --colors ./test/routes.test.js --watch",
+    "test:cache-hook": "NODE_ENV=test nyc mocha --compilers js:babel-core/register --colors ./test/cache.test.js --watch",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.test.js",
-    "coveralls": "nyc report --reporter=text-lcov | node node_modules/.bin/coveralls"
+    "coverage": "nyc report --reporter text",
+    "coveralls": "nyc report --reporter text-lcov | node node_modules/.bin/coveralls"
   },
   "dependencies": {
     "chalk": "^2.3.2",

@@ -1,9 +1,9 @@
 {
   "presets": ["es2015"],
   "plugins": ["babel-plugin-add-module-exports"],
-    "env": {
-      "test": {
-        "plugins": [ "istanbul"]
-      }
+  "env": {
+    "test": {
+      "plugins": [ "istanbul"]
+    }
   }
 }

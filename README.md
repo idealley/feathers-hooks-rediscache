@@ -6,7 +6,7 @@
 
 ## Releases
 * Versions 1.x.x are compatible with Feathersjs 3.x.x
-* Versions 0.x.x are compatible with Feathersjs 2.x.x
+* Versions 0.x.x are compatible with Feathersjs 2.x.x -> those will not be updated anymore
 
 ## Installation
 
@@ -188,6 +188,10 @@ Copyright (c) 2017
 Licensed under the [MIT license](LICENSE).
 
 ## Change log
+### v1.0.3
+* Webpack 4
+* Dependencies update
+* Loging of info: modification of the console display
 ### v1.0.0
 * Compatibility with Feathers 3.x.x
 * Nested routes fix #3

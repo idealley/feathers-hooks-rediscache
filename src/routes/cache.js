@@ -53,18 +53,19 @@ function routes(app) {
   });
 
   // add route to display cache index
-  router.get('/index', (req, res) => {
-    let results = new Set();
+  // this has been removed for performance issues
+  // router.get('/index', (req, res) => {
+  //   let results = new Set();
 
-    h.scanAsync('0', '*', results)
-      .then(data => {
-        res.status(200).json(data);
-      })
-      .catch(err => {
-        res.status(404).json(err);
-      });
+  //   h.scanAsync('0', '*', results)
+  //     .then(data => {
+  //       res.status(200).json(data);
+  //     })
+  //     .catch(err => {
+  //       res.status(404).json(err);
+  //     });
 
-  });
+  // });
 
   return router;
 }

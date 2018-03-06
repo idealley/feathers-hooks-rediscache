@@ -604,13 +604,13 @@ describe('Redis After Hook', () => {
     });
   });
 
-  after(() => {
-    client.del('parent');
-    client.del('parent?full=true');
-    client.del('test-route');
-    client.del('test-route?full=true');
-    client.del('group-test-route');
-    client.del('group-parent');
-  });
+  // after(() => {
+  //   client.del('parent');
+  //   client.del('parent?full=true');
+  //   client.del('test-route');
+  //   client.del('test-route?full=true');
+  //   client.del('group-test-route');
+  //   client.del('group-parent');
+  // });
 
 });
