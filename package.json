@@ -9,7 +9,6 @@
       "babel-register"
     ],
     "reporter": [
-      "text-lcov",
       "lcov",
       "text"
     ],
@@ -41,8 +40,8 @@
   "scripts": {
     "build": "webpack --env build --mode production",
     "dev": "webpack --progress --colors --watch --env dev --mode development",
-    "dev-travis": "webpack --env dev && npm run test",
-    "mocha": "mocha --require babel-core/register --colors ./test/*.test.js",
+    "dev-travis": "webpack --mode production && npm run test",
+    "mocha": "mocha --require babel-core/register --colors ./test/*.test.js --exit",
     "reporter": "NODE_ENV=test nyc npm run mocha",
     "test": "npm run reporter",
     "test:redis-after": "NODE_ENV=test nyc mocha --require babel-core/register --colors ./test/redis-after.test.js --watch",
@@ -51,7 +50,7 @@
     "test:cache-hook": "NODE_ENV=test nyc mocha --compilers js:babel-core/register --colors ./test/cache.test.js --watch",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.test.js",
     "coverage": "nyc report --reporter text",
-    "coveralls": "nyc report --reporter text-lcov | node node_modules/.bin/coveralls"
+    "coveralls": "nyc report --reporter lcov | node node_modules/.bin/coveralls"
   },
   "dependencies": {
     "chalk": "^2.3.2",
