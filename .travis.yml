@@ -6,6 +6,7 @@ node_js:
   - "8"
 before_install:  
   - npm install -g npm
+  - npm install -g codecov
 script: 
   - npm run dev-travis
 cache:
@@ -13,5 +14,6 @@ cache:
     - "node_modules"
 after_success: 
   - npm run coveralls
+  - npm run codecov
 notifications:
   email: false

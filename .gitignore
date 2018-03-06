@@ -16,6 +16,8 @@ lib-
 # Coverage directory used by tools like istanbul
 coverage
 .coveralls.yml
+coverage.lcov
+
 
 # Compiled files
 lib/
