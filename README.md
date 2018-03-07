@@ -6,7 +6,7 @@
 
 ## Releases
 * Versions 1.x.x are compatible with Feathersjs 3.x.x
-* Versions 0.x.x are compatible with Feathersjs 2.x.x -> those will not be updated anymore
+* Versions 0.x.x are compatible with Feathersjs 2.x.x -> this branch will not be updated anymore
 
 ## Installation
 
@@ -188,6 +188,8 @@ Copyright (c) 2017
 Licensed under the [MIT license](LICENSE).
 
 ## Change log
+### v1.1.0
+* The `/index` path as well as the scan methods have been removed for now. In fact, testing on a Redis instance with more than 30k keys, it might bring down your server. I need to find a better way to return keys, or to search for them. So to prevent any problem I have removed it. (the code is commented out).
 ### v1.0.3
 * Webpack 4
 * Dependencies update
