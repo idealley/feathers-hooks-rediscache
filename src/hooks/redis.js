@@ -30,7 +30,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
           /* istanbul ignore next */
           if (process.env.NODE_ENV !== 'test') {
             console.log(`${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.`);
-            console.log(`Expires on ${duration}.`);
+            console.log(`> Expires on ${duration}.`);
           }
         } else {
           resolve(hook);
@@ -71,7 +71,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
         /* istanbul ignore next */
         if (process.env.NODE_ENV !== 'test') {
           console.log(`${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.`);
-          console.log(`Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
+          console.log(`> Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
         }
       }
       resolve(hook);
