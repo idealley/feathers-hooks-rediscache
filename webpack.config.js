@@ -20,12 +20,12 @@ if (env === 'build') {
 let nodeModules = {};
 
 fs.readdirSync('node_modules')
-.filter(function (x) {
-  return ['.bin'].indexOf(x) === -1;
-})
-.forEach(function (mod) {
-  nodeModules[mod] = 'commonjs ' + mod;
-});
+  .filter(function (x) {
+    return ['.bin'].indexOf(x) === -1;
+  })
+  .forEach(function (mod) {
+    nodeModules[mod] = 'commonjs ' + mod;
+  });
 
 const config = {
   entry: __dirname + '/src/index.js',
