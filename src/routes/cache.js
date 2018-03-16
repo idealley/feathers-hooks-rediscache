@@ -41,7 +41,7 @@ function routes(app) {
   router.get('/clear/group/:target', (req, res) => {
     client.get(`${req.params.target}`, (err, reply) => {
       if (err) {
-        res.status(500).json({message: 'something went wrong'});
+        res.status(500).json({message: 'something went wrong' + err.message });
       } else {
         const group = reply ? JSON.parse(reply).cache.group : '';
 
