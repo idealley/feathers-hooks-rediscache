@@ -40,15 +40,18 @@ function routes(app) {
   // clear a group
   router.get('/clear/group/:target', (req, res) => {
     client.get(`${req.params.target}`, (err, reply) => {
-      if (err) res.status(500).json({message: 'something went wrong'});
-      const group = reply ? JSON.parse(reply).cache.group : '';
+      if (err) {
+        res.status(500).json({message: 'something went wrong'});
+      } else {
+        const group = reply ? JSON.parse(reply).cache.group : '';
 
-      h.clearGroup(group).then(r => {
-        res.status(200).json({
-          message: `cache ${r ? '' : 'already'} cleared for the group key: ${req.params.target}`,
-          status: r ? 200 : 204
+        h.clearGroup(group).then(r => {
+          res.status(200).json({
+            message: `cache ${r ? '' : 'already'} cleared for the group key: ${req.params.target}`,
+            status: r ? 200 : 204
+          });
         });
-      });
+      }
     });
   });
 

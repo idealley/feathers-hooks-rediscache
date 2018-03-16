@@ -24,7 +24,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/idealley/feathers-hooks-rediscache.git"
+    "url": "git://github.com/renaudfv/feathers-hooks-rediscache.git"
   },
   "author": {
     "name": "Samuel Pouyt",
