@@ -3,7 +3,6 @@ import chalk from 'chalk';
 import { parsePath } from './helpers/path';
 
 const defaults = {};
-const env = process.env.NODE_ENV;
 
 export function before(options) { // eslint-disable-line no-unused-vars
   options = Object.assign({}, defaults, options);
@@ -12,6 +11,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
     return new Promise(resolve => {
       const client = hook.app.get('redisClient');
       const cacheOptions = hook.app.get('redisCache');
+      const env = cacheOptions.env || 'production';
       const path = parsePath(hook, cacheOptions);
 
       client.get(path, (err, reply) => {
@@ -43,6 +43,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
         const cacheOptions = hook.app.get('redisCache');
+        const env = cacheOptions.env || 'production';
         const cachingDefault = cacheOptions.defaultDuration ? cacheOptions.defaultDuration : 3600 * 24;
         const duration = hook.result.cache.duration || cachingDefault;
         const client = hook.app.get('redisClient');
@@ -65,7 +66,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
         }
 
         /* istanbul ignore next */
-        if (process.env.NODE_ENV !== 'test') {
+        if (env !== 'test') {
           console.log(`${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.`);
           console.log(`> Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
         }
@@ -74,7 +75,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
       if (hook.result.cache.hasOwnProperty('wrapped')) {
         const { wrapped } = hook.result.cache;
 
-        hook.result.cache = wrapped;
+        hook.result = wrapped;
       }
 
       resolve(hook);
