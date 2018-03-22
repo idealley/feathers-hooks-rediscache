@@ -190,6 +190,9 @@ Copyright (c) 2017
 Licensed under the [MIT license](LICENSE).
 
 ## Change log
+### v.1.1
+* Fixes #23. Feathers works slightly differently, now the change is reflected in the hooks. Tests were adapted.
+* Fixes #24. When it can Webpack 4 tries to evaluate code and remove "dead" code, therefore a condition testing for the environement was being evaluated, the value was set to the build environement... To bypass that, the hooks consider that they run in production mode. If you want to set a different one add a property `env: "NODE_ENV"` to the rediscache object, it will pick up your node environement and pass it to the hooks.  
 ### v1.1.0
 * The `/index` path as well as the scan methods have been removed for now. In fact, testing on a Redis instance with more than 30k keys, it might bring down your server. I need to find a better way to return keys, or to search for them. So to prevent any problem I have removed it. (the code is commented out).
 ### v1.0.3
