@@ -19,11 +19,6 @@ export function before(options) { // eslint-disable-line no-unused-vars
           let data = JSON.parse(reply);
           const duration = moment(data.cache.expiresOn).format('DD MMMM YYYY - HH:mm:ss');
 
-          if (data.cache.hasOwnProperty('wrapped')) {
-            const { wrapped } = data.cache;
-
-            data = wrapped;
-          }
           hook.result = data;
           resolve(hook);
 
@@ -74,6 +69,13 @@ export function after(options) { // eslint-disable-line no-unused-vars
           console.log(`> Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
         }
       }
+
+      if (hook.result.cache.hasOwnProperty('wrapped')) {
+        const { wrapped } = hook.result.cache;
+
+        hook.result.cache = wrapped;
+      }
+
       resolve(hook);
     });
   };

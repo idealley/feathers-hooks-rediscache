@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import redis from 'redis';
 import moment from 'moment';
-import { redisBeforeHook as b } from '../src';
+import { redisBeforeHook as b, redisAfterHook as a } from '../src';
 
 const client = redis.createClient();
 
@@ -116,6 +116,7 @@ describe('Redis Before Hook', () => {
 
   it('retrives a wrapped array', () => {
     const hook = b();
+    const after = a();
     const mock = {
       params: { query: ''},
       path: '',
@@ -128,13 +129,15 @@ describe('Redis Before Hook', () => {
     };
 
     return hook(mock).then(result => {
-      const data = result.result;
+      after(result).then(result => {
+        const data = result.result;
 
-      expect(data).to.be.an('array').that.deep.equals([
-        {title: 'title 1'},
-        {title: 'title 2'}
-      ]);
-      expect(data.cache).to.equal(undefined);
+        expect(data).to.be.an('array').that.deep.equals([
+          {title: 'title 1'},
+          {title: 'title 2'}
+        ]);
+        expect(data.cache).to.equal(undefined);
+      });
     });
   });
 
