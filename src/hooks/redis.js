@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { parsePath } from './helpers/path';
 
 const defaults = {};
+const env = process.env.NODE_ENV;
 
 export function before(options) { // eslint-disable-line no-unused-vars
   options = Object.assign({}, defaults, options);
@@ -23,7 +24,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
           resolve(hook);
 
           /* istanbul ignore next */
-          if (process.env.NODE_ENV !== 'test') {
+          if (env !== 'test') {
             console.log(`${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.`);
             console.log(`> Expires on ${duration}.`);
           }
