@@ -5,7 +5,7 @@ import { removeCacheInformation as hookRemoveCacheInformation } from './hooks/ca
 import { before as redisBeforeHook} from './hooks/redis';
 import { after as redisAfterHook} from './hooks/redis';
 
-export {
+export default {
   redisClient,
   cacheRoutes,
   hookCache,

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import redis from 'redis';
-import { redisAfterHook as a } from '../src';
+import { redisAfterHook as a } from '../../src';
 // import moment from 'moment';
 
 const client = redis.createClient();

@@ -41,7 +41,7 @@
     "build": "webpack --env build --mode production",
     "dev": "webpack --progress --colors --watch --env dev --mode development",
     "dev-travis": "webpack --mode production && npm run test",
-    "mocha": "mocha --require babel-core/register --colors ./test/*.test.js --exit",
+    "mocha": "mocha --require babel-core/register --colors ./test/ --recursive --exit",
     "reporter": "NODE_ENV=test nyc npm run mocha",
     "test": "npm run reporter",
     "test:redis-after": "NODE_ENV=test nyc mocha --require babel-core/register --colors ./test/redis-after.test.js --watch",

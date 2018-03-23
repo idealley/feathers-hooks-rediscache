@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import redis from 'redis';
 import moment from 'moment';
-import { hookRemoveCacheInformation as r } from '../src';
+import { hookRemoveCacheInformation as r } from '../../src';
 
 const client = redis.createClient();
 
