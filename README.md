@@ -60,8 +60,23 @@ Add the different hooks. The order matters (see below). A `cache` object will be
 If the cache object is not needed/wanted it can be removed with the after hook `hookRemoveCacheInformation()`
 
 ### Configuration
+#### Redis
+To configure the redis connection the feathers configuration system can be used.
+```js
+//config/default.json
+{
+  "host": "localhost",
+  "port": 3030,
+  "redis": {
+    "host": "my-redis-service.example.com",
+    "port": 1234
+  }
+}
+```
+* if no config is provided, default config from the [redis module](https://github.com/NodeRedis/node_redis) is used
 
-A cache object can be added to the default feathers configuration
+#### Hooks Configuration
+A redisCache object can be added to the default feathers configuration
 
 ```js
 //config/default.json
@@ -69,11 +84,18 @@ A cache object can be added to the default feathers configuration
   "redisCache" : {
     "defaultDuration": 3600,
     "parseNestedRoutes": true,
-    "removePathFromCacheKey": true
+    "removePathFromCacheKey": true,
+    "env": "NODE_ENV"
   };
 ```
+##### defaultDuration
 The default duration can be configured by passing the duration in seconds to the property `defaultDuration`.
+This can be overridden at the hook level (see the full example bellow)
+
+##### parseNestedRoutes
 If your API uses nested routes like `/author/:authorId/book` you should turn on the option `parseNestedRoutes`. Otherwise you could have conflicting cache keys.
+
+##### removePathFromCacheKey
 `removePathFromCacheKey` is an option that is useful when working with content and slugs. If when this option is turned on you can have the following issue. If your routes use IDs then you could have a conflict and the cache might return the wrong value:
 
 ```js
@@ -83,10 +105,15 @@ If your API uses nested routes like `/author/:authorId/book` you should turn on 
 
 both items with id `123` would be saved under the same cache key... thus replacing each other and returning one for the other, thus by default the key includes the path to diferenciate them. when working with content you could have an external system busting the cache that is not aware of your API routes. That system would know the slug, but cannot bust the cache as it would have to call `/cache/clear/single/:path/target`, with this option that system can simply call `:target` which would be the slug/alias of the article.
 
+##### env
+The default environement is production, but it is anoying when running test as the hooks output information to the console. Therefore if you youse this option, you can set `test` as an environement and the hooks will not output anything to the console. if you use `NODE_ENV` it will pick up the `process.env.NODE_ENV` variable. This is useful for CI or CLI.
+
 
 Available routes:
 ```js
-'/cache/index' // returns an array with all the keys
+// this route is disable as I noticed issues when redis has many keys, 
+// I will put it back when I have a more robust solution
+// '/cache/index' // returns an array with all the keys
 '/cache/clear' // clears the whole cache
 '/cache/clear/single/:target' // clears a single route if you want to purge a route with params just adds them target?param=1
 '/cache/clear/group/:target' // clears a group
@@ -168,24 +195,9 @@ module.exports = {
 * the duration is in seconds and will automatically expire
 * you may just use `cache()` without specifying a duration, any request will be cached for a day or with the global configured value (see configuration above).
 
-
-To configure the redis connection the feathers configuration system can be used.
-```js
-//config/default.json
-{
-  "host": "localhost",
-  "port": 3030,
-  "redis": {
-    "host": "my-redis-service.example.com",
-    "port": 1234
-  }
-}
-```
-* if no config is provided, default config from the [redis module](https://github.com/NodeRedis/node_redis) is used
-
 ## License
 
-Copyright (c) 2017
+Copyright (c) 2018
 
 Licensed under the [MIT license](LICENSE).
 

@@ -202,11 +202,32 @@ describe('Redis Before Hook', () => {
     });
   });
 
+  it('changes the environement', () => {
+    const hook = b();
+    const mock = {
+      params: { query: { full: true }},
+      path: 'does-nothing',
+      id: '',
+      app: {
+        get: (what) => {
+          return what === 'redisCache'
+            ? {env: 'test'}
+            : client;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      expect(result.app.get('redisCache').env).to.equal('test');
+    });
+  });
+
   after(() => {
     client.del('before-test-route');
     client.del('before-test-route?full=true');
     client.del('before-parent-route');
     client.del('before-wrapped');
     client.del('before-parent-route?full=true');
+    client.del('env-test');
   });
 });

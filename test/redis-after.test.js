@@ -604,6 +604,35 @@ describe('Redis After Hook', () => {
     });
   });
 
+  it('changes the environement', () => {
+    const hook = a();
+    const mock = {
+      params: { query: { full: true }},
+      path: 'env-test',
+      id: '',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: true,
+          duration: 8400
+        }
+      },
+      app: {
+        get: (what) => {
+          return what === 'redisCache'
+            ? {env: 'test'}
+            : client;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      expect(result.app.get('redisCache').env).to.equal('test');
+    });
+  });
+
   // after(() => {
   //   client.del('parent');
   //   client.del('parent?full=true');
