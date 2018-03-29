@@ -32,12 +32,14 @@ function routes(app) {
         target = req.url.split('/')[3];
       }
 
+      // Gets the value of a key in the redis client
       client.get(`${target}`, (err, reply) => {
         if (err) {
           res.status(HTTP_SERVER_ERROR).json({
             message: 'something went wrong' + err.message
           });
         } else {
+          // If the key existed
           if (reply) {
             // Clear existing cached key
             h.clearSingle(target).then(r => {
@@ -72,21 +74,18 @@ function routes(app) {
     const target = req.params.target;
 
     if (target) {
-      console.log('get group')
-      client.get(target, (err, reply) => {
-        console.log(err, reply)
+      // Returns elements of the list associated to the target/key 0 being the
+      // first and -1 specifying get all till the latest
+      client.lrange(target, 0, -1, (err, reply) => {
         if (err) {
           res.status(HTTP_SERVER_ERROR).json({
             message: 'something went wrong' + err.message
           });
         } else {
-          const group = reply ? JSON.parse(reply).cache.group : '';
-
-          console.log(group)
-          if (reply) {
-            console.log(reply)
+          // If the list/group existed and contains something
+          if (Array.isArray(reply) && (reply.length > 0)) {
             // Clear existing cached group key
-            h.clearGroup(group).then(r => {
+            h.clearGroup(target).then(r => {
               res.status(HTTP_OK).json({
                 message:
                   `cache cleared for the group key: ${req.params.target}`,

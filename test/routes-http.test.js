@@ -136,7 +136,7 @@ describe('Cache clearing http routes', () => {
 
   it('removes all the item from a redis list array', async () => {
     const options = {
-      uri: serverUrl + '/cache/clear/group/test-key',
+      uri: serverUrl + '/cache/clear/group/group-test-key',
       json: true
     };
 
@@ -146,30 +146,31 @@ describe('Cache clearing http routes', () => {
       expect(!!response).to.equal(true);
       // Should no raise errors but status No content
       expect(response.status).to.equal(200);
-      expect(response.message).to.equal('cache cleared for group key: ' +
-        'test-key');
+      expect(response.message).to.equal('cache cleared for the group key: ' +
+        'group-test-key');
     } catch (err) {
       throw new Error(err);
     }
   });
 
-  it('returns 204 when the trying to delete the same group again', async () => {
-    const options = {
-      uri: serverUrl + '/cache/clear/group/test-key',
-      json: true
-    };
+  it('returns No content when the trying to delete the same group again',
+    async () => {
+      const options = {
+        uri: serverUrl + '/cache/clear/group/group-test-key',
+        json: true
+      };
 
-    try {
-      const response = await request(options);
-
-      expect(!!response).to.equal(true);
-      expect(response.status).to.equal(204);
-      expect(response.message).to.equal('cache already cleared for the group ' +
-        'key: test-key');
-    } catch (err) {
-      throw new Error(err);
-    }
-  });
+      try {
+        const response = await request(options);
+        console.log(response);
+        expect(!!response).to.equal(true);
+        expect(response.status).to.equal(204);
+        expect(response.message).to.equal('cache already cleared for the ' +
+          'group key: group-test-key');
+      } catch (err) {
+        throw new Error(err);
+      }
+    });
 
   it('really removed keys in a group', () => {
     client.get('path-2', reply => {
