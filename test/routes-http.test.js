@@ -10,21 +10,23 @@ import bodyParser from 'body-parser';
 import errorHandler from 'feathers-errors/handler';
 
 import redis from 'redis';
-import RedisCache from '../src/routes/helpers/redis';
 import routes from '../src/routes/cache';
+
 // To be used with the mocked app
 import redisClient from '../src/redisClient';
-
+// To be used with direct functions
 const client = redis.createClient();
-const h = new RedisCache(client);
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
 const rpushAsync = promisify(client.rpush).bind(client);
 const lrangeAsync = promisify(client.lrange).bind(client);
-const delAsync = promisify(client.del).bind(client);
 
 const PORT = 3030;
 const serverUrl = `http://0.0.0.0:${PORT}`;
+
+const HTTP_OK = 200;
+const HTTP_NO_CONTENT = 204;
+const HTTP_NOT_FOUND = 404;
 
 describe('Cache clearing http routes', () => {
   before(async () => {
@@ -71,7 +73,7 @@ describe('Cache clearing http routes', () => {
       await request(uri);
     } catch (err) {
       expect(!!err).to.equal(true);
-      expect(err.statusCode).to.equal(404);
+      expect(err.statusCode).to.equal(HTTP_NOT_FOUND);
     }
   });
 
@@ -85,11 +87,10 @@ describe('Cache clearing http routes', () => {
       const response = await request(options);
 
       expect(!!response).to.equal(true);
-      expect(response.status).to.equal(200);
+      expect(response.status).to.equal(HTTP_OK);
       expect(response.message).to.equal('cache cleared for key ' +
         '(without params): cache-test-key');
     } catch (err) {
-      console.log(err);
       throw new Error(err);
     }
   });
@@ -104,10 +105,8 @@ describe('Cache clearing http routes', () => {
       try {
         const response = await request(options);
 
-        console.log('Response', response);
-
         expect(!!response).to.equal(true);
-        expect(response.status).to.equal(204);
+        expect(response.status).to.equal(HTTP_NO_CONTENT);
         expect(response.message).to.equal('cache already cleared for key ' +
           '(without params): cache-test-key');
       } catch (err) {
@@ -126,7 +125,7 @@ describe('Cache clearing http routes', () => {
 
       expect(!!response).to.equal(true);
       // Should no raise errors but status No content
-      expect(response.status).to.equal(204);
+      expect(response.status).to.equal(HTTP_NO_CONTENT);
       expect(response.message).to.equal('cache already cleared for key ' +
         '(without params): cache-does-not-exist');
     } catch (err) {
@@ -144,10 +143,14 @@ describe('Cache clearing http routes', () => {
       const response = await request(options);
 
       expect(!!response).to.equal(true);
-      // Should no raise errors but status No content
-      expect(response.status).to.equal(200);
+      expect(response.status).to.equal(HTTP_OK);
       expect(response.message).to.equal('cache cleared for the group key: ' +
         'group-test-key');
+
+      // Make sure using the funciton
+      const reply = await lrangeAsync('group-test-key', 0, -1);
+
+      expect(reply).to.be.an('array').to.be.empty;
     } catch (err) {
       throw new Error(err);
     }
@@ -162,9 +165,9 @@ describe('Cache clearing http routes', () => {
 
       try {
         const response = await request(options);
-        console.log(response);
+
         expect(!!response).to.equal(true);
-        expect(response.status).to.equal(204);
+        expect(response.status).to.equal(HTTP_NO_CONTENT);
         expect(response.message).to.equal('cache already cleared for the ' +
           'group key: group-test-key');
       } catch (err) {
@@ -178,9 +181,29 @@ describe('Cache clearing http routes', () => {
     });
   });
 
-  it('really emptied the group', async () => {
-    const reply = await lrangeAsync('group-test-key', 0, -1);
+  it('returns route not found if no single target provided', async () => {
+    const options = {
+      uri: serverUrl + '/cache/clear/single',
+      json: true
+    };
 
-    expect(reply).to.be.an('array').to.be.empty;
+    try {
+      await request(options);
+    } catch (err) {
+      expect(err.statusCode).to.equal(HTTP_NOT_FOUND);
+    }
+  });
+
+  it('returns route not found if no group target provided', async () => {
+    const options = {
+      uri: serverUrl + '/cache/clear/group/',
+      json: true
+    };
+
+    try {
+      await request(options);
+    } catch (err) {
+      expect(err.statusCode).to.equal(HTTP_NOT_FOUND);
+    }
   });
 });

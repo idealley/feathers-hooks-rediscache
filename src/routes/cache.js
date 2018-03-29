@@ -1,10 +1,9 @@
 import express from 'express';
-// import redis from 'redis';
+
 import RedisCache from './helpers/redis';
 
 const HTTP_OK = 200;
 const HTTP_NO_CONTENT = 204;
-const HTTP_BAD_REQUEST = 400;
 const HTTP_SERVER_ERROR = 500;
 
 function routes(app) {
@@ -21,11 +20,13 @@ function routes(app) {
   });
 
   // clear a unique route
-  router.get('/clear/single/:target?', (req, res) => {
+  router.get('/clear/single/:target', (req, res) => {
     let target = req.params.target;
     // Formated options following ?
     const query = req.params.query;
 
+    // Target should always be defined as Express router raises 404
+    // as route is not handled
     if (target) {
       if (query) {
       // Keep queries in a single string with the taget
@@ -64,8 +65,6 @@ function routes(app) {
 
         }
       });
-    } else {
-      res.status(HTTP_BAD_REQUEST).json({message: 'No group target provided'});
     }
   });
 
@@ -73,6 +72,8 @@ function routes(app) {
   router.get('/clear/group/:target', (req, res) => {
     const target = req.params.target;
 
+    // Target should always be defined as Express router raises 404
+    // as route is not handled
     if (target) {
       // Returns elements of the list associated to the target/key 0 being the
       // first and -1 specifying get all till the latest
@@ -83,7 +84,7 @@ function routes(app) {
           });
         } else {
           // If the list/group existed and contains something
-          if (Array.isArray(reply) && (reply.length > 0)) {
+          if (reply && Array.isArray(reply) && (reply.length > 0)) {
             // Clear existing cached group key
             h.clearGroup(target).then(r => {
               res.status(HTTP_OK).json({
@@ -106,8 +107,6 @@ function routes(app) {
           }
         }
       });
-    } else {
-      res.status(HTTP_BAD_REQUEST).json({message: 'No group target provided'});
     }
   });
 
