@@ -142,7 +142,7 @@ describe('Cache clearing http routes', () => {
 
     try {
       const response = await request(options);
-      console.log(response);
+
       expect(!!response).to.equal(true);
       expect(response.status).to.equal(HTTP_OK);
       expect(response.message).to.equal('cache cleared for key ' +
