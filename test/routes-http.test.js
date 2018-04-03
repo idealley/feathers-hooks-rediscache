@@ -154,7 +154,7 @@ describe('Cache clearing http routes', () => {
 
   it('removes all the item from a redis list array', async () => {
     const options = {
-      uri: serverUrl + '/cache/clear/group/group-test-key',
+      uri: serverUrl + '/cache/clear/group/test-key',
       json: true
     };
 
@@ -164,10 +164,10 @@ describe('Cache clearing http routes', () => {
       expect(!!response).to.equal(true);
       expect(response.status).to.equal(HTTP_OK);
       expect(response.message).to.equal('cache cleared for the group key: ' +
-        'group-test-key');
+        'test-key');
 
       // Make sure using the funciton
-      const reply = await lrangeAsync('group-test-key', 0, -1);
+      const reply = await lrangeAsync('test-key', 0, -1);
 
       expect(reply).to.be.an('array').to.be.empty;
     } catch (err) {
@@ -178,7 +178,7 @@ describe('Cache clearing http routes', () => {
   it('returns No content when the trying to delete the same group again',
     async () => {
       const options = {
-        uri: serverUrl + '/cache/clear/group/group-test-key',
+        uri: serverUrl + '/cache/clear/group/test-key',
         json: true
       };
 
@@ -188,7 +188,7 @@ describe('Cache clearing http routes', () => {
         expect(!!response).to.equal(true);
         expect(response.status).to.equal(HTTP_NO_CONTENT);
         expect(response.message).to.equal('cache already cleared for the ' +
-          'group key: group-test-key');
+          'group key: test-key');
       } catch (err) {
         throw new Error(err);
       }

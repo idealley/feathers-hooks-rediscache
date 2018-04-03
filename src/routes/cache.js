@@ -71,11 +71,12 @@ function routes(app) {
 
   // clear a group
   router.get('/clear/group/:target', (req, res) => {
-    const target = req.params.target;
+    let target = req.params.target;
 
     // Target should always be defined as Express router raises 404
     // as route is not handled
     if (target) {
+      target = 'group-' + target;
       // Returns elements of the list associated to the target/key 0 being the
       // first and -1 specifying get all till the latest
       client.lrange(target, 0, -1, (err, reply) => {
