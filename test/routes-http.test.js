@@ -34,6 +34,7 @@ describe('Cache clearing http routes', () => {
     await setAsync('path-1', 'value-1');
     await setAsync('path-2', 'value-2');
     await setAsync('path-3', 'value-3');
+    await setAsync('path-with-query?test=true', 'value-query');
     await rpushAsync('group-test-key', ['path-1', 'path-2', 'path-3']);
 
     // Create an express server asynchronously before tests
@@ -133,6 +134,24 @@ describe('Cache clearing http routes', () => {
     }
   });
 
+  it('returns OK when it removes an item with query from the cache', async () => {
+    const options = {
+      uri: serverUrl + '/cache/clear/single/path-with-query?test=true',
+      json: true
+    };
+
+    try {
+      const response = await request(options);
+      console.log(response);
+      expect(!!response).to.equal(true);
+      expect(response.status).to.equal(HTTP_OK);
+      expect(response.message).to.equal('cache cleared for key ' +
+        '(with params): path-with-query?test=true');
+    } catch (err) {
+      throw new Error(err);
+    }
+  });
+
   it('removes all the item from a redis list array', async () => {
     const options = {
       uri: serverUrl + '/cache/clear/group/group-test-key',
@@ -204,6 +223,23 @@ describe('Cache clearing http routes', () => {
       await request(options);
     } catch (err) {
       expect(err.statusCode).to.equal(HTTP_NOT_FOUND);
+    }
+  });
+
+  it('should allow clearing everything', async () => {
+    const options = {
+      uri: serverUrl + '/cache/clear',
+      json: true
+    };
+
+    try {
+      const response = await request(options);
+
+      expect(!!response).to.equal(true);
+      expect(response.status).to.equal(HTTP_OK);
+      expect(response.message).to.equal('Cache cleared');
+    } catch (err) {
+      throw new Error(err);
     }
   });
 });

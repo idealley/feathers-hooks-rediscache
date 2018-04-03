@@ -23,12 +23,13 @@ function routes(app) {
   router.get('/clear/single/:target', (req, res) => {
     let target = req.params.target;
     // Formated options following ?
-    const query = req.params.query;
+    const query = req.query;
+    const hasQueryString = (query && (Object.keys(query).length !== 0));
 
     // Target should always be defined as Express router raises 404
     // as route is not handled
     if (target) {
-      if (query) {
+      if (hasQueryString) {
       // Keep queries in a single string with the taget
         target = req.url.split('/')[3];
       }
@@ -45,7 +46,7 @@ function routes(app) {
             // Clear existing cached key
             h.clearSingle(target).then(r => {
               res.status(HTTP_OK).json({
-                message: `cache cleared for key (${query ?
+                message: `cache cleared for key (${hasQueryString ?
                   'with' : 'without'} params): ${target}`,
                 status: HTTP_OK
               });
@@ -57,7 +58,7 @@ function routes(app) {
              * provide a body, message would then be lost.
              */
             res.status(HTTP_OK).json({
-              message: `cache already cleared for key (${ query ?
+              message: `cache already cleared for key (${hasQueryString ?
                 'with' : 'without'} params): ${target}`,
               status: HTTP_NO_CONTENT
             });
