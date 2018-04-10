@@ -11,10 +11,6 @@ const rpushAsync = promisify(client.rpush).bind(client);
 const lrangeAsync = promisify(client.lrange).bind(client);
 const delAsync = promisify(client.del).bind(client);
 
-describe('Cache routes', () => {
-
-});
-
 describe('Cache functions', () => {
   before(async () => {
     await setAsync('cache-test-key', 'value');
@@ -101,4 +97,3 @@ describe('Cache functions', () => {
     expect(reply).to.equal(0);
   });
 });
-

@@ -1,55 +1,115 @@
 import express from 'express';
-// import redis from 'redis';
+
 import RedisCache from './helpers/redis';
+
+const HTTP_OK = 200;
+const HTTP_NO_CONTENT = 204;
+const HTTP_SERVER_ERROR = 500;
 
 function routes(app) {
   const router = express.Router();
   const client = app.get('redisClient');
   const h = new RedisCache(client);
 
-  // adding some cache routes
-
   router.get('/clear', (req, res) => {
     client.flushall();
-    res.status(200).json({
-      message: 'Cache cleared'
+    res.status(HTTP_OK).json({
+      message: 'Cache cleared',
+      status: HTTP_OK
     });
   });
 
   // clear a unique route
-  router.get('/clear/single/:target?', (req, res) => {
-    const t = req.url.split('/')[3];
+  router.get('/clear/single/:target', (req, res) => {
+    let target = req.params.target;
+    // Formated options following ?
+    const query = req.query;
+    const hasQueryString = (query && (Object.keys(query).length !== 0));
 
-    if (t.includes('?')) {
-      h.clearSingle(t).then(r => {
-        res.status(200).json({
-          message: `cache ${r ? '' : 'already'} cleared for key (with params): ${t}`,
-          status: r ? 200 : 204
-        });
-      });
-    } else {
-      h.clearSingle(req.params.target).then(r => {
-        res.status(200).json({
-          message: `cache ${r ? '' : 'already'} cleared for key (without params): ${req.params.target}`,
-          status: r ? 200 : 204
-        });
+    // Target should always be defined as Express router raises 404
+    // as route is not handled
+    if (target) {
+      if (hasQueryString) {
+      // Keep queries in a single string with the taget
+        target = req.url.split('/')[3];
+      }
+
+      // Gets the value of a key in the redis client
+      client.get(`${target}`, (err, reply) => {
+        if (err) {
+          res.status(HTTP_SERVER_ERROR).json({
+            message: 'something went wrong' + err.message
+          });
+        } else {
+          // If the key existed
+          if (reply) {
+            // Clear existing cached key
+            h.clearSingle(target).then(r => {
+              res.status(HTTP_OK).json({
+                message: `cache cleared for key (${hasQueryString ?
+                  'with' : 'without'} params): ${target}`,
+                status: HTTP_OK
+              });
+            });
+          } else {
+            /**
+             * Empty reply means the key does not exist.
+             * Must use HTTP_OK with express as HTTP's RFC stats 204 should not
+             * provide a body, message would then be lost.
+             */
+            res.status(HTTP_OK).json({
+              message: `cache already cleared for key (${hasQueryString ?
+                'with' : 'without'} params): ${target}`,
+              status: HTTP_NO_CONTENT
+            });
+          }
+
+        }
       });
     }
   });
 
   // clear a group
   router.get('/clear/group/:target', (req, res) => {
-    client.get(`${req.params.target}`, (err, reply) => {
-      if (err) res.status(500).json({message: 'something went wrong'});
-      const group = reply ? JSON.parse(reply).cache.group : '';
+    let target = req.params.target;
 
-      h.clearGroup(group).then(r => {
-        res.status(200).json({
-          message: `cache ${r ? '' : 'already'} cleared for the group key: ${req.params.target}`,
-          status: r ? 200 : 204
-        });
+    // Target should always be defined as Express router raises 404
+    // as route is not handled
+    if (target) {
+      target = 'group-' + target;
+      // Returns elements of the list associated to the target/key 0 being the
+      // first and -1 specifying get all till the latest
+      client.lrange(target, 0, -1, (err, reply) => {
+        if (err) {
+          res.status(HTTP_SERVER_ERROR).json({
+            message: 'something went wrong' + err.message
+          });
+        } else {
+          // If the list/group existed and contains something
+          if (reply && Array.isArray(reply) && (reply.length > 0)) {
+            // Clear existing cached group key
+            h.clearGroup(target).then(r => {
+              res.status(HTTP_OK).json({
+                message:
+                  `cache cleared for the group key: ${req.params.target}`,
+                status: HTTP_OK
+              });
+            });
+          } else {
+            /**
+             * Empty reply means the key does not exist.
+             * Must use HTTP_OK with express as HTTP's RFC stats 204 should not
+             * provide a body, message would then be lost.
+             */
+            res.status(HTTP_OK).json({
+              message:
+                `cache already cleared for the group key: ${req.params.target}`,
+              status: HTTP_NO_CONTENT
+            });
+          }
+        }
       });
-    });
+    }
   });
 
   // add route to display cache index

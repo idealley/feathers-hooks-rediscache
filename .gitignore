@@ -20,7 +20,7 @@ coverage.lcov
 
 
 # Compiled files
-lib/
+# lib/
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
