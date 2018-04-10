@@ -49,7 +49,7 @@
     "test:routes": "NODE_ENV=test nyc mocha --compilers js:babel-core/register --colors ./test/routes.test.js --watch",
     "test:cache-hook": "NODE_ENV=test nyc mocha --compilers js:babel-core/register --colors ./test/cache.test.js --watch",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.test.js",
-    "coverage": "nyc report --reporter text",
+    "coverage": "nyc report --reporter=text-lcov",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
     "codecov": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
