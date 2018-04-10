@@ -30,6 +30,7 @@ Each request to an endpoint can be cached. Route variables and params are cached
 
 The cache can be purged for an individual route, but also for a group of routes. This is very useful if you have an API endpoint that creates a list of articles, and an endpoint that returns an individual article. If the article is modified, the list of articles should, most likely, be purged as well. This can be done by calling one endpoint.
 
+### Routes exemples
 In the same fashion if you have many variants of the same endpoint that return similar content based on parameters you can bust the whole group as well:
 
 ```js
@@ -37,10 +38,16 @@ In the same fashion if you have many variants of the same endpoint that return s
 '/articles/article' //individual item
 '/articles/article?markdown=true' // variant
 ```
+#### Clearing cache
+These are all listed in a redis list under `group-articles` and can be busted by calling `/cache/clear/group/article` or `/cache/clear/group/articles` it does not matter. All urls keys will be purged.
 
-These are all listed in a redis list under `group-articles` and can be busted by calling `/cache/clear/group/article` or `/cache/clear/group/articles` it does not matter. All urls will be purged.
-
-It was meant to be used over http, not yet tested with sockets.
+You can also purge single cached paths as by doing GET requests on 
+```js
+'/cache/clear/single/articles'
+'/cache/clear/single/articles/article'
+'/cache/clear/single/articles/article?markdown=true' // works with query strings too
+```
+It was meant to be used over **_HTTP_**, not yet tested with sockets.
 
 ## Available hooks
 More details and example use bellow
@@ -51,7 +58,7 @@ More details and example use bellow
 ### After
 * `hookCache` - set defaults caching duration, an object can be passed with the duration in seconds
 * `redisAfterHook` - saves to redis
-* `hookRemoveCacheInformation` - removes the cache object
+* `hookRemoveCacheInformation` - removes the cache object from responses (does not clear from Redis)
 
 
 ## Documentation
