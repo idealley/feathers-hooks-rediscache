@@ -4,6 +4,7 @@ services:
 node_js:
   - "9"
   - "8"
+  - "10"
 before_install:  
   - npm install -g npm
   - npm install -g codecov
