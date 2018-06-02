@@ -21,7 +21,7 @@ function routes(app) {
 
   // clear a unique route
   router.get('/clear/single/:target', (req, res) => {
-    let target = req.params.target;
+    let target = decodeURIComponent(req.params.target);
     // Formated options following ?
     const query = req.query;
     const hasQueryString = (query && (Object.keys(query).length !== 0));
@@ -31,7 +31,7 @@ function routes(app) {
     if (target) {
       if (hasQueryString) {
       // Keep queries in a single string with the taget
-        target = req.url.split('/')[3];
+        target = decodeURIComponent(req.url.split('/')[3]);
       }
 
       // Gets the value of a key in the redis client
@@ -71,7 +71,7 @@ function routes(app) {
 
   // clear a group
   router.get('/clear/group/:target', (req, res) => {
-    let target = req.params.target;
+    let target = decodeURIComponent(req.params.target);
 
     // Target should always be defined as Express router raises 404
     // as route is not handled
@@ -91,7 +91,7 @@ function routes(app) {
             h.clearGroup(target).then(r => {
               res.status(HTTP_OK).json({
                 message:
-                  `cache cleared for the group key: ${req.params.target}`,
+                  `cache cleared for the group key: ${decodeURIComponent(req.params.target)}`,
                 status: HTTP_OK
               });
             });
@@ -103,7 +103,7 @@ function routes(app) {
              */
             res.status(HTTP_OK).json({
               message:
-                `cache already cleared for the group key: ${req.params.target}`,
+                `cache already cleared for the group key: ${decodeURIComponent(req.params.target)}`,
               status: HTTP_NO_CONTENT
             });
           }
