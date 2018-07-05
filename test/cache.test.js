@@ -1,10 +1,15 @@
 import { expect } from 'chai';
 import { hookCache } from '../src';
 
+const app = {
+  get: () => ({})
+};
+
 describe('Cache Hook', () => {
   it('adds a cache object', () => {
     const hook = hookCache();
     const mock = {
+      app: app,
       params: { query: ''},
       path: 'test-route',
       result: {
@@ -29,6 +34,7 @@ describe('Cache Hook', () => {
   it('does not modify the existing cache object', () => {
     const hook = hookCache();
     const mock = {
+      app: app,
       params: { query: ''},
       path: 'test-route',
       result: {
@@ -52,6 +58,7 @@ describe('Cache Hook', () => {
   it('wraps arrays', () => {
     const hook = hookCache();
     const mock = {
+      app: app,
       params: { query: ''},
       path: 'test-route-array',
       result: [
