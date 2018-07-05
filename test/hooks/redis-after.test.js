@@ -38,6 +38,7 @@ describe('Redis After Hook', () => {
       expect(data.cache.key).to.equal('test-route');
     });
   });
+
   it('caches a route', () => {
     const hook = a();
     const mock = {

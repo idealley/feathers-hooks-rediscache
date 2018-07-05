@@ -9,7 +9,7 @@ describe('Cache Hook', () => {
   it('adds a cache object', () => {
     const hook = hookCache();
     const mock = {
-      app: app,
+      app,
       params: { query: ''},
       path: 'test-route',
       result: {
@@ -31,10 +31,42 @@ describe('Cache Hook', () => {
     });
   });
 
+  it('uses config options instead of defaults', () => {
+    const hook = hookCache();
+    const mock = {
+      app: { get: (what) => {
+        if (what === 'redisCache') {
+          return {
+            'defaultDuration': 12
+          };
+        }
+        return {};
+      }},
+      params: { query: ''},
+      path: 'test-route',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: true,
+          duration: 12
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.cached).to.equal(true);
+      expect(data.cache.duration).to.equal(12);
+    });
+  });
+
   it('does not modify the existing cache object', () => {
     const hook = hookCache();
     const mock = {
-      app: app,
+      app,
       params: { query: ''},
       path: 'test-route',
       result: {
@@ -58,7 +90,7 @@ describe('Cache Hook', () => {
   it('wraps arrays', () => {
     const hook = hookCache();
     const mock = {
-      app: app,
+      app,
       params: { query: ''},
       path: 'test-route-array',
       result: [
