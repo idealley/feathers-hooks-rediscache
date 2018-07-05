@@ -1,14 +1,17 @@
 /**
  * After hook - generates a cache object that is needed
  * for the redis hook and the express middelware.
- * @todo add default value in config file
  */
-const defaults = {};
+const defaults = {
+  defaultDuration: 3600 * 24
+};
 
 export function cache(options) { // eslint-disable-line no-unused-vars
-  options = Object.assign({}, defaults, options);
-
   return function (hook) {
+    const cacheOptions = hook.app.get('redisCache');
+
+    options = Object.assign({}, defaults, cacheOptions, options);
+
     if (!hook.result.hasOwnProperty('cache')) {
       let cache = {};
 
@@ -21,7 +24,7 @@ export function cache(options) { // eslint-disable-line no-unused-vars
 
       cache = Object.assign({}, cache, {
         cached: false,
-        duration: options.duration || 3600 * 24
+        duration: options.duration || options.defaultDuration
       });
 
       hook.result.cache = cache;
@@ -31,8 +34,6 @@ export function cache(options) { // eslint-disable-line no-unused-vars
 };
 
 export function removeCacheInformation(options) { // eslint-disable-line no-unused-vars
-  options = Object.assign({}, defaults, options);
-
   return function (hook) {
     if (hook.result.hasOwnProperty('cache')) {
       delete hook.result.cache;

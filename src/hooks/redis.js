@@ -2,17 +2,20 @@ import moment from 'moment';
 import chalk from 'chalk';
 import { parsePath } from './helpers/path';
 
-const defaults = {};
+const defaults = {
+  env: 'production',
+  defaultDuration: 3600 * 24
+};
 
 export function before(options) { // eslint-disable-line no-unused-vars
-  options = Object.assign({}, defaults, options);
-
   return function (hook) {
+    const cacheOptions = hook.app.get('redisCache');
+
+    options = Object.assign({}, defaults, cacheOptions, options);
+
     return new Promise(resolve => {
       const client = hook.app.get('redisClient');
-      const cacheOptions = hook.app.get('redisCache');
-      const env = cacheOptions.env || 'production';
-      const path = parsePath(hook, cacheOptions);
+      const path = parsePath(hook, options);
 
       client.get(path, (err, reply) => {
         if (err !== null) resolve(hook);
@@ -24,7 +27,7 @@ export function before(options) { // eslint-disable-line no-unused-vars
           resolve(hook);
 
           /* istanbul ignore next */
-          if (env !== 'test') {
+          if (options.env !== 'test') {
             console.log(`${chalk.cyan('[redis]')} returning cached value for ${chalk.green(path)}.`);
             console.log(`> Expires on ${duration}.`);
           }
@@ -37,17 +40,16 @@ export function before(options) { // eslint-disable-line no-unused-vars
 };
 
 export function after(options) { // eslint-disable-line no-unused-vars
-  options = Object.assign({}, defaults, options);
-
   return function (hook) {
+    const cacheOptions = hook.app.get('redisCache');
+
+    options = Object.assign({}, defaults, cacheOptions, options);
+
     return new Promise(resolve => {
       if (!hook.result.cache.cached) {
-        const cacheOptions = hook.app.get('redisCache');
-        const env = cacheOptions.env || 'production';
-        const cachingDefault = cacheOptions.defaultDuration ? cacheOptions.defaultDuration : 3600 * 24;
-        const duration = hook.result.cache.duration || cachingDefault;
+        const duration = hook.result.cache.duration || options.defaultDuration;
         const client = hook.app.get('redisClient');
-        const path = parsePath(hook, cacheOptions);
+        const path = parsePath(hook, options);
 
         // adding a cache object
         Object.assign(hook.result.cache, {
@@ -66,7 +68,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
         }
 
         /* istanbul ignore next */
-        if (env !== 'test') {
+        if (options.env !== 'test') {
           console.log(`${chalk.cyan('[redis]')} added ${chalk.green(path)} to the cache.`);
           console.log(`> Expires in ${moment.duration(duration, 'seconds').humanize()}.`);
         }
