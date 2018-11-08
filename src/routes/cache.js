@@ -5,6 +5,7 @@ import RedisCache from './helpers/redis';
 const HTTP_OK = 200;
 const HTTP_NO_CONTENT = 204;
 const HTTP_SERVER_ERROR = 500;
+const HTTP_NOT_FOUND = 404;
 
 function routes(app) {
   const router = express.Router();
@@ -20,18 +21,18 @@ function routes(app) {
   });
 
   // clear a unique route
-  router.get('/clear/single/:target', (req, res) => {
-    let target = decodeURIComponent(req.params.target);
+  router.get('/clear/single/*', (req, res) => {
+    let target = decodeURIComponent(req.params[0]); 
     // Formated options following ?
     const query = req.query;
     const hasQueryString = (query && (Object.keys(query).length !== 0));
 
     // Target should always be defined as Express router raises 404
     // as route is not handled
-    if (target) {
+    if (!!target) {
       if (hasQueryString) {
       // Keep queries in a single string with the taget
-        target = decodeURIComponent(req.url.split('/')[3]);
+        target = decodeURIComponent(req.url.split('/').slice(3).join('/'));
       }
 
       // Gets the value of a key in the redis client
@@ -66,16 +67,18 @@ function routes(app) {
 
         }
       });
+    }else{
+      res.status(HTTP_NOT_FOUND).end()
     }
   });
 
   // clear a group
-  router.get('/clear/group/:target', (req, res) => {
-    let target = decodeURIComponent(req.params.target);
+  router.get('/clear/group/*', (req, res) => {
+    let target = decodeURIComponent(req.params[0]); 
 
     // Target should always be defined as Express router raises 404
     // as route is not handled
-    if (target) {
+    if (!!target) {
       target = 'group-' + target;
       // Returns elements of the list associated to the target/key 0 being the
       // first and -1 specifying get all till the latest
@@ -91,7 +94,7 @@ function routes(app) {
             h.clearGroup(target).then(r => {
               res.status(HTTP_OK).json({
                 message:
-                  `cache cleared for the group key: ${decodeURIComponent(req.params.target)}`,
+                  `cache cleared for the group key: ${decodeURIComponent(req.params[0])}`,
                 status: HTTP_OK
               });
             });
@@ -103,12 +106,14 @@ function routes(app) {
              */
             res.status(HTTP_OK).json({
               message:
-                `cache already cleared for the group key: ${decodeURIComponent(req.params.target)}`,
+                `cache already cleared for the group key: ${decodeURIComponent(req.params[0])}`,
               status: HTTP_NO_CONTENT
             });
           }
         }
       });
+    }else{
+      res.status(HTTP_NOT_FOUND).end()
     }
   });
 
