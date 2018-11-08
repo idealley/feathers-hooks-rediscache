@@ -23,14 +23,14 @@ function routes(app) {
 
   // clear a unique route
   router.get('/clear/single/*', (req, res) => {
-    let target = decodeURIComponent(req.params[0]); 
+    let target = decodeURIComponent(req.params[0]);
     // Formated options following ?
     const query = req.query;
     const hasQueryString = (query && (Object.keys(query).length !== 0));
 
     // Target should always be defined as Express router raises 404
     // as route is not handled
-    if (!!target) {
+    if (target.length) {
       if (hasQueryString) {
       // Keep queries in a single string with the taget
         target = decodeURIComponent(req.url.split('/').slice(3).join('/'));
@@ -68,18 +68,18 @@ function routes(app) {
 
         }
       });
-    }else{
-      res.status(HTTP_NOT_FOUND).end()
+    } else {
+      res.status(HTTP_NOT_FOUND).end();
     }
   });
 
   // clear a group
   router.get('/clear/group/*', (req, res) => {
-    let target = decodeURIComponent(req.params[0]); 
+    let target = decodeURIComponent(req.params[0]);
 
     // Target should always be defined as Express router raises 404
     // as route is not handled
-    if (!!target) {
+    if (target.length) {
       target = 'group-' + target;
       // Returns elements of the list associated to the target/key 0 being the
       // first and -1 specifying get all till the latest
@@ -113,8 +113,8 @@ function routes(app) {
           }
         }
       });
-    }else{
-      res.status(HTTP_NOT_FOUND).end()
+    } else {
+      res.status(HTTP_NOT_FOUND).end();
     }
   });
 
