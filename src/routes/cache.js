@@ -13,12 +13,13 @@ function routes(app) {
   const h = new RedisCache(client);
 
   router.get('/clear', (req, res) => {
-    client.flushall();
-    res.status(HTTP_OK).json({
-      message: 'Cache cleared',
-      status: HTTP_OK
+    client.flushall('ASYNC', () => {
+      res.status(HTTP_OK).json({
+        message: 'Cache cleared',
+        status: HTTP_OK
+      });
     });
-  });
+  }); // clear a unique route
 
   // clear a unique route
   router.get('/clear/single/*', (req, res) => {
