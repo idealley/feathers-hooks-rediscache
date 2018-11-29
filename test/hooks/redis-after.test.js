@@ -72,6 +72,37 @@ describe('Redis After Hook', () => {
     });
   });
 
+  it('caches a route using params.cacheKey instead of params.query', () => {
+    const hook = a();
+    const mock = {
+      params: {
+        query: { foo: 'bar', lorem: 'ipsum' },
+        cacheKey: 'after-cache-key?foo=bar'
+      },
+      id: 'after-cache-key',
+      path: '',
+      result: {
+        _sys: {
+          status: 200
+        },
+        cache: {
+          cached: false
+        }
+      },
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data.cache.key).to.equal('after-cache-key?foo=bar');
+    });
+  });
+
   it('caches a parent route that returns an array', () => {
     const hook = a();
     const mock = {
@@ -104,6 +135,7 @@ describe('Redis After Hook', () => {
       expect(data.cache.key).to.equal('test-route');
     });
   });
+
   it('caches a parent route with setting to remove path from key...', () => {
     const hook = a();
     const mock = {

@@ -4,7 +4,8 @@ import { parsePath } from './helpers/path';
 
 const defaults = {
   env: 'production',
-  defaultDuration: 3600 * 24
+  defaultDuration: 3600 * 24,
+  immediateCacheKey: false
 };
 
 export function before(options) { // eslint-disable-line no-unused-vars
@@ -32,6 +33,9 @@ export function before(options) { // eslint-disable-line no-unused-vars
             console.log(`> Expires on ${duration}.`);
           }
         } else {
+          if (options.immediateCacheKey === true) {
+            hook.params.cacheKey = path;
+          }
           resolve(hook);
         }
       });
@@ -49,7 +53,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
       if (!hook.result.cache.cached) {
         const duration = hook.result.cache.duration || options.defaultDuration;
         const client = hook.app.get('redisClient');
-        const path = parsePath(hook, options);
+        const path = hook.params.cacheKey || parsePath(hook, options);
 
         // adding a cache object
         Object.assign(hook.result.cache, {
