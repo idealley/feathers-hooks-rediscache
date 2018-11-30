@@ -54,7 +54,7 @@ export function after(options) { // eslint-disable-line no-unused-vars
       if (!hook.result.cache.cached) {
         const duration = hook.result.cache.duration || options.defaultDuration;
         const client = hook.app.get('redisClient');
-        
+
         if (!client) {
           resolve(hook);
         }
