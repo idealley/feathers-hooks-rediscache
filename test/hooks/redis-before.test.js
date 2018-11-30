@@ -74,6 +74,24 @@ describe('Redis Before Hook', () => {
     ));
   });
 
+  it('sets cacheKey in before hook if immediateCacheKey true', () => {
+    const hook = b({ immediateCacheKey: true });
+    const mock = {
+      params: { query: { foo: 'bar' }},
+      path: '',
+      id: 'before-cache-key',
+      app: {
+        get: (what) => {
+          return client;
+        }
+      }
+    };
+
+    return hook(mock).then(result => {
+      expect(result.params.cacheKey).to.be.equal('before-cache-key?foo=bar');
+    });
+  });
+
   it('retrives a cached object', () => {
     const hook = b();
     const mock = {

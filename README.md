@@ -115,6 +115,20 @@ both items with id `123` would be saved under the same cache key... thus replaci
 ##### env
 The default environement is production, but it is anoying when running test as the hooks output information to the console. Therefore if you youse this option, you can set `test` as an environement and the hooks will not output anything to the console. if you use `NODE_ENV` it will pick up the `process.env.NODE_ENV` variable. This is useful for CI or CLI.
 
+##### immediateCacheKey
+By default the redis cache key gets determined in `redisAfterHook` based on the path. However if you're doing a lot of query manipulation you might want to set the cache key before anything else to keep its size as small as possible. You can achieve this by setting `immediateCacheKey: true` what will set the cache key in the `redisBeforeHook`. Then your hooks might look similar to:
+
+```js
+{
+  before: {
+    find: [redisBefore({ immediateCacheKey: true }), someQueryManipulation()]
+  },
+  after: {
+    find: [cache(), redisAfter()]
+  }
+}
+```
+
 
 Available routes:
 ```js
