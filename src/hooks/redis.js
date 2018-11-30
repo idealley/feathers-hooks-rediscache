@@ -15,6 +15,11 @@ export function before(options) { // eslint-disable-line no-unused-vars
 
     return new Promise(resolve => {
       const client = hook.app.get('redisClient');
+
+      if (!client) {
+        resolve(hook);
+      }
+
       const path = parsePath(hook, options);
 
       client.get(path, (err, reply) => {
@@ -49,6 +54,11 @@ export function after(options) { // eslint-disable-line no-unused-vars
       if (!hook.result.cache.cached) {
         const duration = hook.result.cache.duration || options.defaultDuration;
         const client = hook.app.get('redisClient');
+        
+        if (!client) {
+          resolve(hook);
+        }
+
         const path = parsePath(hook, options);
 
         // adding a cache object
