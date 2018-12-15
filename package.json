@@ -65,7 +65,7 @@
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-es2015": "^7.0.0-beta.53",
-    "@babel/register": "^7.0.0-beta.49",
+    "@babel/register": "^7.0.0",
     "babel-loader": "8.0.0",
     "babel-eslint": "8.2.6",
     "babel-plugin-add-module-exports": "0.3.3",
