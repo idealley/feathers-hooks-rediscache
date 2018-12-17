@@ -16,6 +16,8 @@ export default function redisClient() { // eslint-disable-line no-unused-vars
   });
   const client = redis.createClient(redisOptions);
 
+  app.set('redisClient', client);
+
   client.on('ready', () => {
     app.set('redisClient', client);
     if (cacheOptions.env !== 'test') {
