@@ -666,6 +666,41 @@ describe('Redis After Hook', () => {
     });
   });
 
+  it ('does not save anything in cache if redisClient offline', () => {
+    const hook = a();
+    const clientDummy = {
+      keys: [],
+      set: function(key, val) {
+        this.keys.push(key);
+      },
+      expire: function() {},
+      rpush: function() {},
+    };
+    const mock = {
+      params: { query: '' },
+      path: 'dummy',
+      id: 'do-not-save',
+      result: {
+        cache: {}
+      },
+      app: {
+        get: (what) => {
+          // comment in to emulate redisClient online (will cause test fail)
+          // if (what === 'redisClient') {
+          //   return clientDummy;
+          // }
+        }
+      }
+    };
+    const prevKeys = clientDummy.keys.join();
+
+    return hook(mock).then(result => {
+      const currKeys = clientDummy.keys.join();
+
+      expect(currKeys).to.equal(prevKeys);
+    });
+  });
+
   // after(() => {
   //   client.del('parent');
   //   client.del('parent?full=true');
