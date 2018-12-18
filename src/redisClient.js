@@ -8,6 +8,7 @@ export default function redisClient() { // eslint-disable-line no-unused-vars
   const redisOptions = Object.assign({}, this.get('redis'), {
     retry_strategy: function (options) { // eslint-disable-line camelcase
       app.set('redisClient', undefined);
+      /* istanbul ignore next */
       if (cacheOptions.env !== 'test') {
         console.log(`${chalk.yellow('[redis]')} not connected`);
       }
@@ -16,8 +17,11 @@ export default function redisClient() { // eslint-disable-line no-unused-vars
   });
   const client = redis.createClient(redisOptions);
 
+  app.set('redisClient', client);
+
   client.on('ready', () => {
     app.set('redisClient', client);
+    /* istanbul ignore next */
     if (cacheOptions.env !== 'test') {
       console.log(`${chalk.green('[redis]')} connected`);
     }

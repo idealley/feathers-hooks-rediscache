@@ -240,6 +240,24 @@ describe('Redis Before Hook', () => {
     });
   });
 
+  it('does not return any result if redisClient offline', () => {
+    const hook = b();
+    const mock = {
+      params: { query: ''},
+      path: '',
+      id: '',
+      app: {
+        get: (what) => {}
+      }
+    };
+
+    return hook(mock).then(result => {
+      const data = result.result;
+
+      expect(data).to.be.undefined;
+    });
+  });
+
   after(() => {
     client.del('before-test-route');
     client.del('before-test-route?full=true');
