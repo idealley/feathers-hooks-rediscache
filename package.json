@@ -68,7 +68,7 @@
     "@babel/register": "^7.0.0-beta.49",
     "babel-loader": "8.0.0",
     "babel-eslint": "8.2.6",
-    "babel-plugin-add-module-exports": "0.3.3",
+    "babel-plugin-add-module-exports": "1.0.2",
     "babel-plugin-istanbul": "^4.1.6",
     "body-parser": "^1.18.2",
     "chai": "4.1.2",
