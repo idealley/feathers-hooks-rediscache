@@ -80,7 +80,7 @@
     "feathers-hooks": "^2.1.2",
     "feathers-rest": "^1.8.1",
     "istanbul": "^0.4.5",
-    "mocha": "5.0.5",
+    "mocha": "7.1.1",
     "nyc": "^12.0.1",
     "request-promise": "^4.2.2",
     "webpack": "^4.2.0",
